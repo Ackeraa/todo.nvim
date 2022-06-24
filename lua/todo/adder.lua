@@ -11,8 +11,9 @@ function Adder:new()
     local height = vim.api.nvim_get_option("lines")
     local win_height = 1
     local win_width = math.ceil(width * 0.5)
-    local row = math.ceil((height - win_height) / 2 - 1)
+    local row = math.ceil((height - win_height - height * 0.3) / 2) - 1
     local col = math.ceil((width - win_width) / 2)
+    local border = { "╭", "─", "╮", "│", "│", " ", "│", "│" }
 
     local opts = {
         style = "minimal",
@@ -21,7 +22,7 @@ function Adder:new()
         height = win_height,
         row = row,
         col = col,
-        border = "rounded",
+        border = border,
     }
 
     local win_id = vim.api.nvim_open_win(buf, true, opts)
