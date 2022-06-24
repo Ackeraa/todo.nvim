@@ -1,9 +1,11 @@
 # todo.nvim
 
 TODO:
-* <leader>t -> floating one line window, could add one todo thing
+* <leader>t -> floating window
+* cmds: add, delete, done
 * mark the thing done
-* keep history?
-* add date?
-* add priority?
-* upload to server or icould
+* keep history
+* add date when marked done
+* add priority: (1)(2)(3)
+* upload to server or icloud
+* example: add (1) finish master-vim
