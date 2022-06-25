@@ -9,3 +9,4 @@ TODO:
 * add priority: (1)(2)(3)
 * upload to server or icloud
 * example: add (1) finish master-vim
+* live grep

@@ -1,17 +1,17 @@
 
---local window = Window:new()
 local M = {}
 
 function M.open()
 
     RELOAD("todo.adder")
     RELOAD("todo.previewer")
-    local Adder = require("todo.adder")
-    local Previewer = require("todo.previewer")
-    local adder = Adder:new()
-    local previewer = Previewer:new()
+    RELOAD("todo.window")
+    local Window = require("todo.window")
+    local window = Window:new()
+    M.window = window
+    window:map_keys()
 
-    return adder, previewer
+    return window
 end
 
 return M
