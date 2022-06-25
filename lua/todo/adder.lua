@@ -1,6 +1,9 @@
+local Parser = require("todo.parser")
+
 local Adder = {}
 
 function Adder:new()
+    local parser = Parser:new()
     local buf = vim.api.nvim_create_buf(false, true)
 
     vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
@@ -15,7 +18,7 @@ function Adder:new()
     local col = math.ceil((width - win_width) / 2)
     local border = { "╭", "─", "╮", "│", "┤", "─", "├", "│" }
 
-   local opts = {
+    local opts = {
         style = "minimal",
         relative = "editor",
         width = win_width,
@@ -36,6 +39,7 @@ function Adder:new()
     local adder = {
         buf = buf,
         win_id = win_id,
+        parser = parser,
     }
     self.__index = self
 
@@ -43,8 +47,7 @@ function Adder:new()
 end
 
 function Adder:adde()
-    
-    return ""
+    return self.parser:parse(self.buf)
 end
 
 function Adder:keys_map()

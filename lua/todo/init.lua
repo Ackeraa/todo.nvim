@@ -3,6 +3,7 @@ local M = {}
 
 function M.open()
 
+    RELOAD("todo.parser")
     RELOAD("todo.adder")
     RELOAD("todo.previewer")
     RELOAD("todo.window")

@@ -15,12 +15,20 @@ function Window:new()
     return setmetatable(window, self)
 end
 
+function Window:doit()
+    op, arg1, arg2 = self.adder:adde()
+    print(op, arg1, arg2)
+    --rst = self.previewer.preview(op, arg1, arg2)
+    return ""
+end
+
 function Window:map_keys()
     local opts = { noremap = true, silent = true }
     local keymap = vim.api.nvim_buf_set_keymap
 
     -- adder mappings
     keymap(self.adder.buf, "c", "q", "<cmd>lua require'todo'.window:close()<CR>", opts)
+    keymap(self.adder.buf, "i", "<CR>","<cmd>lua require'todo'.window:doit()<CR>", opts)
 
     -- previewer mappings
 end
