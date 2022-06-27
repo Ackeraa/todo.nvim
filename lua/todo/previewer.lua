@@ -6,7 +6,6 @@ function Previewer:new()
     local buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
 
-
     local width = vim.api.nvim_get_option("columns")
     local height = vim.api.nvim_get_option("lines")
     local win_height = math.ceil(height * 0.3)
@@ -62,19 +61,18 @@ function Previewer:load_file(filename)
     local file = io.open(filename, "r")
     if file then
         for line in file:lines() do
-            line = self:_parse_line(line)
             table.insert(self.lines, line)
         end
         file:close()
+        self:_update()
     end
-    vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, self.lines)
 end
 
 function Previewer:save_file(filename)
     local file = io.open(filename, "w")
     if file then
         for _, line in ipairs(self.lines) do
-            file:write(line.text .. "\n")
+            file:write(line .. "\n")
         end
         file:close()
     else
@@ -82,13 +80,13 @@ function Previewer:save_file(filename)
     end
 end
 
-function Previewer:_parse(line)
-    local priority = string.match(line, "^%d+")
-    if priority then
-        return { priority = tonumber(priority), text = line }
-    else
-        return { text = line }
-    end
+function Previewer:_update()
+    vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, self.lines)
+
+    --[[ vim.api.nvim_buf_clear_namespace(self.buf, 0, -1, "todo")
+    for _, line in ipairs(self.lines) do
+        vim.api.nvim_buf_add_line(self.buf, -1, { line }, "todo")
+    end ]]
 end
 
 function Previewer:_add(priority, text)

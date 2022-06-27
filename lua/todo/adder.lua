@@ -25,11 +25,12 @@ function Adder:new()
         border = border,
     }
 
+    -- do not allow to change the content of the buffer
     local win_id = vim.api.nvim_open_win(buf, true, opts)
 
     vim.highlight.create("Border", { guifg = "#19e6e6" }, false)
     vim.api.nvim_win_set_option(win_id, "winhighlight", "NormalFloat:Normal,FloatBorder:Border")
-    -- vim.api.nvim_win_set_cursor(win_id, {1, 2})
+    --vim.api.nvim_win_set_cursor(win_id, {1, 2})
     -- local new_pos = vim.api.nvim_win_get_cursor(win_id)[1]
     -- vim.api.nvim_win_set_cursor(win_id, {1, 4})
 
@@ -74,15 +75,10 @@ function Adder:_parse(line)
     return op, arg1, arg2
 end
 
-function Adder:keys_map()
-    return "1"
-end
-
-function Adder:map_keys()
-    local opts = { noremap = true, silent = true }
-    local keymap = vim.api.nvim_buf_set_keymap
-
-    keymap(self.buf, "i", "<CR>", self:adde(), opts)
+-- switch to insert mode and set the cursor to the end of the line
+function Adder:_set_cursor()
+    vim.api.nvim_command("normal! i")
+    vim.api.nvim_win_set_cursor(self.win_id, {1, #vim.api.nvim_buf_get_lines(self.buf, 0, -1, false)[1]})
 end
 
 function Adder:close()

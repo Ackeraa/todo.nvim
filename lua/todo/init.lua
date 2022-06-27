@@ -9,7 +9,7 @@ function M.open()
     local Window = require("todo.window")
     local window = Window:new()
     M.window = window
-    window:map_keys()
+    window:setup()
 
     return window
 end
