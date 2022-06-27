@@ -52,22 +52,23 @@ function Adder:_parse(line)
     local arg1 = nil
     local arg2 = nil
 
-    if string.sub(line, 1, 1) == "a" then
-        -- TODO: priority(arg2) maybe greater than 9, but I don't think it's necessary
-        -- TODO: prefix should be used 
+    local uop = string.match(line, "^%w+")
+    local puop = "^"..uop
+    if string.match("add", puop) then
         op = "add"
-        arg1 = tonumber(string.sub(line, 5, 5))
-        arg2 = string.sub(line, 7)
-    elseif string.sub(line, 1, 2) == "de" then
+        arg1, arg2 = string.match(line, "%w+%s+(%d+)%s+(.+)")
+        arg1 = tonumber(arg1)
+    elseif string.match("delete", puop) then   -- d -> delete
         op = "delete"
-        arg1 = tonumber(string.sub(line, 8, 8))
-    elseif string.sub(line, 1, 2) == "do" then
+        arg1 = tonumber(string.match(line, "(%d+)$"))
+    elseif string.match("done", puop) then
         op = "done"
-        arg1 = tonumber(string.sub(line, 6, 6))
-    elseif string.sub(line, 1, 1) == "e" then
+        arg1 = tonumber(string.match(line, "(%d+)$"))
+        arg1 = tonumber(arg1)
+    elseif string.match("edit", puop) then
         op = "edit"
-        arg1 = tonumber(string.sub(line, 6, 6))
-        arg2 = string.sub(line, 8)
+        arg1, arg2 = string.match(line, "%w+%s+(%d+)%s+(.+)")
+        arg1 = tonumber(arg1)
     end
 
     return op, arg1, arg2

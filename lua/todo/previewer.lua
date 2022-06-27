@@ -4,9 +4,8 @@ local Previewer = {}
 
 function Previewer:new()
     local buf = vim.api.nvim_create_buf(false, true)
-
     vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
-    --vim.api.nvim_buf_set_text(buf, 0, 0, 0, 0, {">"})
+
 
     local width = vim.api.nvim_get_option("columns")
     local height = vim.api.nvim_get_option("lines")
@@ -36,20 +35,11 @@ function Previewer:new()
     local previewer = {
         buf = buf,
         win_id = win_id,
+        lines = {},
     }
     self.__index = self
 
     return setmetatable(previewer, self)
-end
-
-function Previewer:load_file(filename)
-    local lines = {}
-    local file = io.open(filename, "r")
-    for line in file:lines() do
-        lines[#lines + 1] = self:_parse(line)
-    end
-    file:close()
-    vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, lines)
 end
 
 function Previewer:preview(op, arg1, arg2)
@@ -62,21 +52,49 @@ function Previewer:preview(op, arg1, arg2)
     elseif op == "edit" then
         self:_edit(arg1)
     else
-        log.error("Unknown Command: ", op)
+        log.error("Unknown command: ", op)
     end
 
     return ""
 end
 
-function Previewer:_parse(line)
-    local op = nil
-    local arg1 = nil
-    local arg2 = nil
+function Previewer:load_file(filename)
+    local file = io.open(filename, "r")
+    if file then
+        for line in file:lines() do
+            line = self:_parse_line(line)
+            table.insert(self.lines, line)
+        end
+        file:close()
+    end
+    vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, self.lines)
+end
 
-    return op, arg1, arg2
+function Previewer:save_file(filename)
+    local file = io.open(filename, "w")
+    if file then
+        for _, line in ipairs(self.lines) do
+            file:write(line.text .. "\n")
+        end
+        file:close()
+    else
+        log.error("Failed to open file: ", filename)
+    end
+end
+
+-- check if the string starts with the given word
+
+function Previewer:_parse(line)
+    local priority = string.match(line, "^%d+")
+    if priority then
+        return { priority = tonumber(priority), text = line }
+    else
+        return { text = line }
+    end
 end
 
 function Previewer:_add(priority, text)
+
 end
 
 function Previewer:close()
