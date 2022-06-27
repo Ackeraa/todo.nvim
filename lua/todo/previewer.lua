@@ -42,20 +42,41 @@ function Previewer:new()
     return setmetatable(previewer, self)
 end
 
+function Previewer:load_file(filename)
+    local lines = {}
+    local file = io.open(filename, "r")
+    for line in file:lines() do
+        lines[#lines + 1] = self:_parse(line)
+    end
+    file:close()
+    vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, lines)
+end
+
 function Previewer:preview(op, arg1, arg2)
     if op == "add" then
-        print("add")
+        self:_add(arg1, arg2)
     elseif op == "delete" then
-        print("delete")
+        self:_delete(arg1)
     elseif op == "done" then
-        print("done")
+        self:_done(arg1)
     elseif op == "edit" then
-        print("edit")
+        self:_edit(arg1)
     else
         log.error("Unknown Command: ", op)
     end
 
     return ""
+end
+
+function Previewer:_parse(line)
+    local op = nil
+    local arg1 = nil
+    local arg2 = nil
+
+    return op, arg1, arg2
+end
+
+function Previewer:_add(priority, text)
 end
 
 function Previewer:close()

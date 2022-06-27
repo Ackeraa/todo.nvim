@@ -1,9 +1,6 @@
-local Parser = require("todo.parser")
-
 local Adder = {}
 
 function Adder:new()
-    local parser = Parser:new()
     local buf = vim.api.nvim_create_buf(false, true)
 
     vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
@@ -39,7 +36,6 @@ function Adder:new()
     local adder = {
         buf = buf,
         win_id = win_id,
-        parser = parser,
     }
     self.__index = self
 
@@ -48,7 +44,33 @@ end
 
 function Adder:adde()
     local line = vim.api.nvim_buf_get_lines(self.buf, 0, -1, false)[1]
-    return self.parser:parse(line)
+    return self:_parse(line)
+end
+
+function Adder:_parse(line)
+    local op = nil
+    local arg1 = nil
+    local arg2 = nil
+
+    if string.sub(line, 1, 1) == "a" then
+        -- TODO: priority(arg2) maybe greater than 9, but I don't think it's necessary
+        -- TODO: prefix should be used 
+        op = "add"
+        arg1 = tonumber(string.sub(line, 5, 5))
+        arg2 = string.sub(line, 7)
+    elseif string.sub(line, 1, 2) == "de" then
+        op = "delete"
+        arg1 = tonumber(string.sub(line, 8, 8))
+    elseif string.sub(line, 1, 2) == "do" then
+        op = "done"
+        arg1 = tonumber(string.sub(line, 6, 6))
+    elseif string.sub(line, 1, 1) == "e" then
+        op = "edit"
+        arg1 = tonumber(string.sub(line, 6, 6))
+        arg2 = string.sub(line, 8)
+    end
+
+    return op, arg1, arg2
 end
 
 function Adder:keys_map()

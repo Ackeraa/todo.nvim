@@ -26,7 +26,7 @@ function Window:map_keys()
     local keymap = vim.api.nvim_buf_set_keymap
 
     -- adder mappings
-    keymap(self.adder.buf, "c", "q", "<cmd>lua require'todo'.window:close()<CR>", opts)
+    keymap(self.adder.buf, "c", "q<CR>", "<cmd>lua require'todo'.window:close()<CR>", opts)
     keymap(self.adder.buf, "i", "<CR>","<cmd>lua require'todo'.window:doit()<CR>", opts)
 
     -- previewer mappings
