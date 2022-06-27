@@ -15,3 +15,6 @@ TODO:
     * edit 1 new text 
 
 * live grep
+* doc
+* unit test
+* call me

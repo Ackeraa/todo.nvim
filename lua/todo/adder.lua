@@ -8,7 +8,7 @@ function Adder:new()
 
     vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
     vim.api.nvim_buf_set_option(buf, "filetype", "todo")
-    vim.api.nvim_buf_set_text(buf, 0, 0, 0, 0, {">  "})
+    vim.api.nvim_buf_set_text(buf, 0, 0, 0, 0, {"  "})
 
     local width = vim.api.nvim_get_option("columns")
     local height = vim.api.nvim_get_option("lines")
@@ -47,7 +47,8 @@ function Adder:new()
 end
 
 function Adder:adde()
-    return self.parser:parse(self.buf)
+    local line = vim.api.nvim_buf_get_lines(self.buf, 0, -1, false)[1]
+    return self.parser:parse(line)
 end
 
 function Adder:keys_map()

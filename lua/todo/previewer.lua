@@ -1,5 +1,6 @@
-local Previewer = {}
+local log = require("todo.log")
 
+local Previewer = {}
 
 function Previewer:new()
     local buf = vim.api.nvim_create_buf(false, true)
@@ -39,6 +40,22 @@ function Previewer:new()
     self.__index = self
 
     return setmetatable(previewer, self)
+end
+
+function Previewer:preview(op, arg1, arg2)
+    if op == "add" then
+        print("add")
+    elseif op == "delete" then
+        print("delete")
+    elseif op == "done" then
+        print("done")
+    elseif op == "edit" then
+        print("edit")
+    else
+        log.error("Unknown Command: ", op)
+    end
+
+    return ""
 end
 
 function Previewer:close()

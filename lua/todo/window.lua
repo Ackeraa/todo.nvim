@@ -17,8 +17,7 @@ end
 
 function Window:doit()
     op, arg1, arg2 = self.adder:adde()
-    print(op, arg1, arg2)
-    --rst = self.previewer.preview(op, arg1, arg2)
+    rst = self.previewer:preview(op, arg1, arg2)
     return ""
 end
 
