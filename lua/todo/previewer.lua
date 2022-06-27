@@ -82,8 +82,6 @@ function Previewer:save_file(filename)
     end
 end
 
--- check if the string starts with the given word
-
 function Previewer:_parse(line)
     local priority = string.match(line, "^%d+")
     if priority then

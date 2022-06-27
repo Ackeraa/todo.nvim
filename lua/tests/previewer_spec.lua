@@ -1,0 +1,17 @@
+describe("previewer", function()
+    local previewer = require("todo.previewer")
+    describe("parse", function()
+        it("should parse right", function()
+            local line = previewer:_parse("1. 123 hello")
+            assert.is.not_nil(line)
+            assert.is.equal(1, line.priority)
+            assert.is.equal("1. 123 hello", line.text)
+
+            line = previewer:_parse("-- 123 hello")
+            assert.is.not_nil(line)
+            assert.is.equal(line.priority, nil)
+            assert.is.equal("-- 123 hello", line.text)
+        end)
+    end)
+end)
+
