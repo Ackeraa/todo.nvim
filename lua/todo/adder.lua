@@ -61,10 +61,10 @@ function Adder:_parse(line)
         arg1 = tonumber(arg1)
     elseif string.match("delete", puop) then   -- d -> delete
         op = "delete"
-        arg1 = tonumber(string.match(line, "(%d+)$"))
+        arg1 = tonumber(string.match(line, "(%d+)%s*$"))
     elseif string.match("done", puop) then
         op = "done"
-        arg1 = tonumber(string.match(line, "(%d+)$"))
+        arg1 = tonumber(string.match(line, "(%d+)%s*$"))
         arg1 = tonumber(arg1)
     elseif string.match("edit", puop) then
         op = "edit"

@@ -1,9 +1,8 @@
-1. do first thing  
-2. do something
-3. do something else
-4. do something else again
-5. do something else again again
-6. do something else again again again
--- done something
--- done something else
--- done something else again
+1. do first thing
+2. do second thing
+3. do third thing
+4. do fourth thing
+5. do fifth thing
+-- do one thing 2020-01-03
+-- do another thing 2020-01-02
+-- do yet another thing 2020-01-01

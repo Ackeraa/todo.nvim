@@ -10,9 +10,9 @@ describe("previewer", function()
                 "3. do something else else",
                 "4. do something else else else",
                 "5. do something else else else else",
-                "-- done something",
-                "-- done something else",
-                "-- done something else else",
+                "-- done something @2016-01-01",
+                "-- done something else @2016-01-01",
+                "-- done something else else @2016-01-01",
             }
             for _, line in ipairs(lines) do
                 file:write(line .. "\n")
@@ -28,10 +28,11 @@ describe("previewer", function()
             assert.is.equal(1, line.priority)
             assert.is.equal("123 hello", line.task)
 
-            line = previewer:_parse("-- 123 hello")
+            line = previewer:_parse("-- 123 hello @2016-01-01")
             assert.is.not_nil(line)
             assert.is.equal(nil, line.priority)
             assert.is.equal("123 hello", line.task)
+            assert.is.equal("2016-01-01", line.date)
         end)
     end)
 
@@ -73,8 +74,26 @@ describe("previewer", function()
             assert.is.equal(1, previewer.lines[1].priority)
             assert.is.equal("do something else else else", previewer.lines[2].task)
             assert.is.equal(2, previewer.lines[2].priority)
+            assert.is_nil(previewer.lines[3].priority)
             assert.is.equal(5, #previewer.lines)
         end)
+
+        it("should done task right", function()
+            previewer = require("todo.previewer"):new()
+            previewer:load_file(filename)
+            previewer:preview("done", 1)
+            previewer:preview("done", 1)
+            previewer:preview("done", 1)
+            assert.is.equal("do something else else else", previewer.lines[1].task)
+            assert.is.equal(1, previewer.lines[1].priority)
+            assert.is.equal("do something else else else else", previewer.lines[2].task)
+            assert.is.equal(2, previewer.lines[2].priority)
+            assert.is.equal("do something else else", previewer.lines[3].task)
+            assert.is.equal("2022-06-28", previewer.lines[3].date)
+            assert.is.equal("do something else", previewer.lines[4].task)
+            assert.is.equal(8, #previewer.lines)
+        end)
+
     end)
 
 end)

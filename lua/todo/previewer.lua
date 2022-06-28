@@ -35,6 +35,7 @@ function Previewer:new()
         buf = buf,
         win_id = win_id,
         lines = {},
+        todos = 0,
     }
     self.__index = self
 
@@ -49,7 +50,7 @@ function Previewer:preview(op, arg1, arg2)
     elseif op == "done" then
         self:_done(arg1)
     elseif op == "edit" then
-        self:_edit(arg1)
+        self:_edit(arg1, arg2)
     else
         log.error("Unknown command: ", op)
     end
@@ -61,32 +62,59 @@ end
 
 function Previewer:_add(priority, task)
     -- TODO: check if priority is valid
-    for i = #self.lines, priority, -1 do
-        if self.lines[i].priority then
-            self.lines[i + 1] = {
-                priority = self.lines[i].priority + 1,
-                task = self.lines[i].task
-            }
-        else
-            self.lines[i + 1] = self.lines[i]
-        end
+    -- shift dones
+    for i = #self.lines, self.todos + 1, -1 do
+        self.lines[i + 1] = self.lines[i]
     end
+
+    -- shift todos after priority
+    for i = self.todos, priority, -1 do
+        self.lines[i + 1] = {
+            priority = self.lines[i].priority + 1,
+            task = self.lines[i].task
+        }
+    end
+
+    -- add new task
     self.lines[priority] = {
         priority = priority,
         task = task
     }
+    self.todos = self.todos + 1
 end
 
 function Previewer:_delete(priority)
     -- TODO: check if priority is valid
-    for i = priority, #self.lines - 1 do
-        if self.lines[i].priority then
-            self.lines[i].task = self.lines[i + 1].task
-        else
-            self.lines[i] = self.lines[i + 1]
-        end
+    -- shift todos
+    for i = priority, self.todos - 1 do
+        self.lines[i].task = self.lines[i + 1].task
     end
+
+    -- shift dones
+    for i = self.todos, #self.lines - 1 do
+        self.lines[i] = self.lines[i + 1]
+    end
+
+    -- delete the last empty line
     self.lines[#self.lines] = nil
+    self.todos = self.todos - 1
+end
+
+function Previewer:_done(priority)
+    -- TODO: check if priority is valid
+    local done = self.lines[priority].task
+
+    -- shift todos
+    for i = priority, self.todos - 1 do
+        self.lines[i].task = self.lines[i + 1].task
+    end
+
+    -- done the task
+    self.lines[self.todos] = {
+        date = os.date("%Y-%m-%d"),
+        task = done,
+    }
+    self.todos = self.todos - 1
 end
 
 function Previewer:load_file(filename)
@@ -94,6 +122,9 @@ function Previewer:load_file(filename)
     if file then
         for line in file:lines() do
             line = self:_parse(line)
+            if line.priority  then
+                self.todos = self.todos + 1
+            end
             table.insert(self.lines, line)
         end
         file:close()
@@ -122,10 +153,10 @@ function Previewer:_parse(line)
             task = line:sub(#priority + 3)
         }
     else
-        local date = "ad"
+        local date = line:match("(%d+-%d+-%d+)$")
         return {
             date = date,
-            task = line:sub(4)
+            task = line:sub(4, #line - #date - 2)
         }
     end
 end
@@ -136,7 +167,7 @@ function Previewer:_repr()
         if line.priority then
             table.insert(lines, line.priority .. ". " .. line.task)
         else
-            table.insert(lines, "-- "..line.task)
+            table.insert(lines, "-- "..line.task.." @"..line.date)
         end
     end
     return lines
