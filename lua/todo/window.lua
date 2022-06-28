@@ -18,9 +18,9 @@ function Window:new()
 end
 
 function Window:setup()
+    self:switch_window("adder")
     self:map_keys()
     self.previewer:load_file("lua/todo/todo.txt")
-    vim.api.nvim_command("call feedkeys('i', 'n')")
 end
 
 function Window:switch_window(which)

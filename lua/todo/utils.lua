@@ -1,6 +1,6 @@
 local utils = {}
 
-utils.create_bufwin = function(width, height, row, col, border)
+utils.create_bufwin = function(width, height, row, col, border, zindex)
 
     local buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
@@ -14,9 +14,10 @@ utils.create_bufwin = function(width, height, row, col, border)
         row = row,
         col = col,
         border = border,
+        zindex = zindex,
     }
 
-    local win_id = vim.api.nvim_open_win(buf, true, opts)
+    local win_id = vim.api.nvim_open_win(buf, false, opts)
 
     return buf, win_id
 end

@@ -8,7 +8,7 @@ function Previewer:new()
     local border = { "├", "─", "┤", "│", "╯", "─", "╰", "│" }
     local buf, win_id = utils.create_bufwin(
             config.width, config.previewer_height,
-            config.row + 1, config.col, border
+            config.row + 2, config.col, border, 1
         )
 
     vim.api.nvim_win_set_option(win_id, "cursorline", true)

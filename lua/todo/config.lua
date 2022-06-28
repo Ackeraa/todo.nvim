@@ -3,6 +3,8 @@ local config = {}
 local width = vim.api.nvim_get_option("columns")
 local height = vim.api.nvim_get_option("lines")
 
+config.title = " TODO "
+config.prompt = "> "
 config.adder_height = 1
 config.previewer_height = math.ceil(height * 0.3)
 config.width = math.ceil(width * 0.5)
