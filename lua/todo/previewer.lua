@@ -117,6 +117,18 @@ function Previewer:_done(priority)
     self.todos = self.todos - 1
 end
 
+function Previewer:_edit(priority, task_or_priority)
+    -- TODO: check if priority is valid
+    local num = tonumber(task_or_priority)
+    if num then
+        local task = self.lines[priority].task
+        self:_delete(priority)
+        self:_add(num, task)
+    else
+        self.lines[priority].task = task_or_priority
+    end
+end
+
 function Previewer:load_file(filename)
     local file = io.open(filename, "r")
     if file then

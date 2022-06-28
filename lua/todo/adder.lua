@@ -68,7 +68,7 @@ function Adder:_parse(line)
         arg1 = tonumber(arg1)
     elseif string.match("edit", puop) then
         op = "edit"
-        arg1, arg2 = string.match(line, "%w+%s+(%d+)%s+(.+)")
+        arg1, arg2 = string.match(line, "%w+%s+(%d+)%s+(%w+)")
         arg1 = tonumber(arg1)
     end
 

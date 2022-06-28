@@ -12,7 +12,7 @@ TODO:
     * add 1 finish master-vim
     * delete 1 / delete text
     * done 1 / done text
-    * edit 1 new text 
+    * edit 1 new text / edit 1 2
 
 * saved file format: 
     * 1. do something

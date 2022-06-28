@@ -94,6 +94,26 @@ describe("previewer", function()
             assert.is.equal(8, #previewer.lines)
         end)
 
+        it("should edit task right", function()
+            previewer = require("todo.previewer"):new()
+            previewer:load_file(filename)
+            previewer:preview("edit", 1, "task1")
+            previewer:preview("edit", 2, "task2")
+            assert.is.equal("task1", previewer.lines[1].task)
+            assert.is.equal(1, previewer.lines[1].priority)
+            assert.is.equal("task2", previewer.lines[2].task)
+            assert.is.equal(2, previewer.lines[2].priority)
+
+            previewer:preview("edit", 1, "2")
+            previewer:preview("edit", 2, "3")
+            assert.is.equal("task2", previewer.lines[1].task)
+            assert.is.equal(1, previewer.lines[1].priority)
+            assert.is.equal("task1", previewer.lines[3].task)
+            assert.is.equal(3, previewer.lines[3].priority)
+            assert.is.equal(8, #previewer.lines)
+
+        end)
+
     end)
 
 end)
