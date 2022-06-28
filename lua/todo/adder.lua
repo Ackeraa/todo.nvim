@@ -53,22 +53,27 @@ function Adder:_parse(line)
     local arg1 = nil
     local arg2 = nil
 
-    local uop = string.match(line, "^%w+")
+    local uop = line:match("^(%w+)")
     local puop = "^"..uop
     if string.match("add", puop) then
         op = "add"
-        arg1, arg2 = string.match(line, "%w+%s+(%d+)%s+(.+)")
-        arg1 = tonumber(arg1)
+        arg1, arg2 = line:match("%w+%s+(%d+)%s+(.+)")
+        if arg1 == nil then
+            arg1 = 1
+            arg2 = line:match("%w+%s+(.+)")
+        else
+            arg1 = tonumber(arg1)
+        end
     elseif string.match("delete", puop) then   -- d -> delete
         op = "delete"
-        arg1 = tonumber(string.match(line, "(%d+)%s*$"))
+        arg1 = tonumber(line:match("(%d+)%s*$"))
     elseif string.match("done", puop) then
         op = "done"
-        arg1 = tonumber(string.match(line, "(%d+)%s*$"))
+        arg1 = tonumber(line:match("(%d+)%s*$"))
         arg1 = tonumber(arg1)
     elseif string.match("edit", puop) then
         op = "edit"
-        arg1, arg2 = string.match(line, "%w+%s+(%d+)%s+(%w+)")
+        arg1, arg2 = line:match("%w+%s+(%d+)%s+(.+)")
         arg1 = tonumber(arg1)
     end
 

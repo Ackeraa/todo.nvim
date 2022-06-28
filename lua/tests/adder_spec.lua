@@ -15,6 +15,11 @@ describe("adder", function()
             assert.is.equal(1123, arg1)
             assert.is.equal("1232 hello world", arg2)
 
+            op, arg1, arg2 = adder:_parse("ad hello world")
+            assert.is.not_nil(op, arg1, arg2)
+            assert.is.equal("add", op)
+            assert.is.equal(1, arg1)
+            assert.is.equal("hello world", arg2)
         end)
 
         it("can parse delete command", function()

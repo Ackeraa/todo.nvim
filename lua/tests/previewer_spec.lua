@@ -62,6 +62,7 @@ describe("previewer", function()
             assert.is.equal("task5", previewer.lines[5].task)
             assert.is.equal("do something else else else else", previewer.lines[8].task)
             assert.is.equal(11, #previewer.lines)
+
         end)
 
         it("should delete task right", function()

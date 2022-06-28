@@ -43,6 +43,11 @@ function Previewer:new()
 end
 
 function Previewer:preview(op, arg1, arg2)
+    if arg1 == nil then
+        log.error("Task does not exist")
+        return nil
+    end
+
     if op == "add" then
         self:_add(arg1, arg2)
     elseif op == "delete" then
@@ -61,7 +66,10 @@ function Previewer:preview(op, arg1, arg2)
 end
 
 function Previewer:_add(priority, task)
-    -- TODO: check if priority is valid
+    if priority > self.todos + 1 then
+        log.error("Task priority is too high")
+        return
+    end
     -- shift dones
     for i = #self.lines, self.todos + 1, -1 do
         self.lines[i + 1] = self.lines[i]
@@ -84,7 +92,11 @@ function Previewer:_add(priority, task)
 end
 
 function Previewer:_delete(priority)
-    -- TODO: check if priority is valid
+    if priority > self.todos then
+        log.error("Task does not exist")
+        return
+    end
+
     -- shift todos
     for i = priority, self.todos - 1 do
         self.lines[i].task = self.lines[i + 1].task
@@ -101,7 +113,11 @@ function Previewer:_delete(priority)
 end
 
 function Previewer:_done(priority)
-    -- TODO: check if priority is valid
+    if priority > self.todos then
+        log.error("Task does not exist")
+        return
+    end
+
     local done = self.lines[priority].task
 
     -- shift todos
@@ -118,9 +134,17 @@ function Previewer:_done(priority)
 end
 
 function Previewer:_edit(priority, task_or_priority)
-    -- TODO: check if priority is valid
+    if priority > self.todos then
+        log.error("Task does not exist")
+        return
+    end
+
     local num = tonumber(task_or_priority)
     if num then
+        if num > self.todos + 1 then
+            log.error("Task priority is too high")
+        end
+
         local task = self.lines[priority].task
         self:_delete(priority)
         self:_add(num, task)
