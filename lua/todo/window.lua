@@ -57,6 +57,7 @@ end
 
 
 function Window:close()
+    -- TODO: return back to the last window
     self.adder:close()
     self.previewer:close()
 end

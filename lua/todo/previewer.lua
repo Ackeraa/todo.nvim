@@ -54,6 +54,8 @@ function Previewer:preview(op, arg1, arg2)
         log.error("Unknown command: ", op)
     end
 
+    self:_update()
+
     return ""
 end
 
@@ -61,6 +63,7 @@ function Previewer:load_file(filename)
     local file = io.open(filename, "r")
     if file then
         for line in file:lines() do
+            line = self:_parse(line)
             table.insert(self.lines, line)
         end
         file:close()
@@ -71,7 +74,8 @@ end
 function Previewer:save_file(filename)
     local file = io.open(filename, "w")
     if file then
-        for _, line in ipairs(self.lines) do
+        local lines = self:_repr()
+        for _, line in ipairs(lines) do
             file:write(line .. "\n")
         end
         file:close()
@@ -80,17 +84,57 @@ function Previewer:save_file(filename)
     end
 end
 
-function Previewer:_update()
-    vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, self.lines)
-
-    --[[ vim.api.nvim_buf_clear_namespace(self.buf, 0, -1, "todo")
-    for _, line in ipairs(self.lines) do
-        vim.api.nvim_buf_add_line(self.buf, -1, { line }, "todo")
-    end ]]
+function Previewer:_parse(line)
+    local priority = line:match("^(%d+)")
+    if priority then
+        return {
+            priority = tonumber(priority),
+            task = line:sub(#priority + 3)
+        }
+    else
+        local date = "ad"
+        return {
+            date = date,
+            task = line:sub(4)
+        }
+    end
 end
 
-function Previewer:_add(priority, text)
+function Previewer:_repr()
+    local lines = {}
+    for _, line in ipairs(self.lines) do
+        if line.priority then
+            table.insert(lines, line.priority .. ". " .. line.task)
+        else
+            table.insert(lines, "-- "..line.task)
+        end
+    end
+    return lines
+end
 
+function Previewer:_update()
+    local lines = self:_repr()
+    vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, lines)
+    --self:save_file("lua/todo/todo.txt")
+end
+
+function Previewer:_add(priority, task)
+    -- TODO: check if priority is valid
+    for i = #self.lines, priority, -1 do
+        local line = self.lines[i]
+        if line.priority then
+            self.lines[i + 1] = {
+                priority = line.priority + 1,
+                task = line.task
+            }
+        else
+            self.lines[i + 1] = self.lines[i]
+        end
+    end
+    self.lines[priority] = {
+        priority = priority,
+        task = task
+    }
 end
 
 function Previewer:close()

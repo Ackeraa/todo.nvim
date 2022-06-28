@@ -1,8 +1,8 @@
 1. do something
 2. do something else
-3. do something else again
-4. do something else again again
-5. do something else again again again
+3. do something else else
+4. do something else else else
+5. do something else else else else
 -- done something
 -- done something else
--- done something else again
+-- done something else else

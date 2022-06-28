@@ -1,8 +1,9 @@
-1. do something
-2. do something else
-3. do something else again
-4. do something else again again
-5. do something else again again again
+1. do first thing  
+2. do something
+3. do something else
+4. do something else again
+5. do something else again again
+6. do something else again again again
 -- done something
 -- done something else
 -- done something else again
