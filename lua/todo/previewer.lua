@@ -1,30 +1,16 @@
 local log = require("todo.log")
+local utils = require("todo.utils")
+local config = require("todo.config")
 
 local Previewer = {}
 
 function Previewer:new()
-    local buf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
-
-    local width = vim.api.nvim_get_option("columns")
-    local height = vim.api.nvim_get_option("lines")
-    local win_height = math.ceil(height * 0.3)
-    local win_width = math.ceil(width * 0.5)
-    local row = math.ceil((height - win_height) / 2) + 1
-    local col = math.ceil((width - win_width) / 2)
     local border = { "├", "─", "┤", "│", "╯", "─", "╰", "│" }
+    local buf, win_id = utils.create_bufwin(
+            config.width, config.previewer_height,
+            config.row + 1, config.col, border
+        )
 
-    local opts = {
-        style = "minimal",
-        relative = "editor",
-        width = win_width,
-        height = win_height,
-        row = row,
-        col = col,
-        border = border,
-    }
-
-    local win_id = vim.api.nvim_open_win(buf, true, opts)
     vim.api.nvim_win_set_option(win_id, "cursorline", true)
 
     vim.highlight.create("Border", { guifg = "#19e6e6" }, false)
@@ -189,10 +175,11 @@ function Previewer:_parse(line)
             task = line:sub(#priority + 3)
         }
     else
-        local date = line:match("(%d+-%d+-%d+)$")
+        local date = line:match("@(%d+-%d+-%d+)")
+        local task = line:match("-- (.+)%s+@")
         return {
             date = date,
-            task = line:sub(4, #line - #date - 2)
+            task = task
         }
     end
 end

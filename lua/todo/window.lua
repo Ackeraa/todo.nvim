@@ -21,7 +21,6 @@ function Window:setup()
     self:map_keys()
     self.previewer:load_file("lua/todo/todo.txt")
     vim.api.nvim_command("call feedkeys('i', 'n')")
-    -- set focus window to the adder window
 end
 
 function Window:switch_window(which)
@@ -36,6 +35,8 @@ end
 function Window:doit()
     op, arg1, arg2 = self.adder:adde()
     rst = self.previewer:preview(op, arg1, arg2)
+    self.previewer:save_file("lua/todo/todo.txt")
+    self.adder:clear()
     return ""
 end
 
@@ -46,12 +47,12 @@ function Window:map_keys()
     -- TODO: Unmap <C-w>w and <C-w>w<CR>
 
     -- adder mappings
-    keymap(self.adder.buf, "n", "<leader>q", "<cmd>lua require'todo'.window:close()<CR>", opts)
+    keymap(self.adder.buf, "n", "<Esc>", "<cmd>lua require'todo'.window:close()<CR>", opts)
     keymap(self.adder.buf, "n", "j", "<cmd>lua require'todo'.window:switch_window('previewer')<CR>", opts)
     keymap(self.adder.buf, "i", "<CR>","<cmd>lua require'todo'.window:doit()<CR>", opts)
 
     -- previewer mappings
-    keymap(self.previewer.buf, "n", "<leader>q", "<cmd>lua require'todo'.window:close()<CR>", opts)
+    keymap(self.previewer.buf, "n", "<Esc>", "<cmd>lua require'todo'.window:close()<CR>", opts)
     keymap(self.previewer.buf, "n", "i", "<cmd>lua require'todo'.window:switch_window('adder')<CR>", opts)
 end
 

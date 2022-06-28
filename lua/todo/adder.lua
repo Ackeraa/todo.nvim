@@ -1,47 +1,50 @@
+local utils = require("todo.utils")
+local config = require("todo.config")
+
 local Adder = {}
 
 function Adder:new()
-    local buf = vim.api.nvim_create_buf(false, true)
-
-    vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
-    vim.api.nvim_buf_set_option(buf, "filetype", "todo")
-    vim.api.nvim_buf_set_text(buf, 0, 0, 0, 0, {"  "})
-
-    local width = vim.api.nvim_get_option("columns")
-    local height = vim.api.nvim_get_option("lines")
-    local win_height = 1
-    local win_width = math.ceil(width * 0.5)
-    local row = math.ceil((height - win_height - height * 0.3) / 2) - 1
-    local col = math.ceil((width - win_width) / 2)
-    local border = { "╭", "─", "╮", "│", "┤", "─", "├", "│" }
-
-    local opts = {
-        style = "minimal",
-        relative = "editor",
-        width = win_width,
-        height = win_height,
-        row = row,
-        col = col,
-        border = border,
-    }
-
-    -- do not allow to change the content of the buffer
-    local win_id = vim.api.nvim_open_win(buf, true, opts)
-
-    vim.highlight.create("Border", { guifg = "#19e6e6" }, false)
-    vim.api.nvim_win_set_option(win_id, "winhighlight", "NormalFloat:Normal,FloatBorder:Border")
-    --vim.api.nvim_win_set_cursor(win_id, {1, 2})
-    -- local new_pos = vim.api.nvim_win_get_cursor(win_id)[1]
-    -- vim.api.nvim_win_set_cursor(win_id, {1, 4})
+    self.__index = self
+    local buf, win_id = self:create_main()
+    --local _, title_win_id = self:create_title()
 
     local adder = {
         buf = buf,
         win_id = win_id,
+       -- title_win_id = title_win_id,
     }
-    self.__index = self
 
     return setmetatable(adder, self)
 end
+
+function Adder:create_main()
+    local border = { "╭", "─", "╮", "│", "┤", "─", "├", "│" }
+
+    local buf, win_id = utils.create_bufwin(
+            config.width, config.adder_height,
+            config.row, config.col, border
+        )
+
+    vim.highlight.create("Border", { guifg = "#19e6e6" }, false)
+    vim.api.nvim_win_set_option(win_id, "winhighlight", "NormalFloat:Normal,FloatBorder:Border")
+
+    return buf, win_id
+end
+
+function Adder:create_title()
+    local buf, win_id = utils.create_bufwin(4, 1, config.row - 1, config.col, "single")
+    vim.api.nvim_buf_set_lines(buf, 0, -1, true, { "TODO" })
+
+    return buf, win_id
+end
+
+function Adder:create_prompt()
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+    vim.api.nvim_buf_set_option(buf, "filetype", "todo")
+    vim.api.nvim_buf_set_text(buf, 0, 0, 0, 0, {"Enter your task:"})
+end
+
 
 function Adder:adde()
     local line = vim.api.nvim_buf_get_lines(self.buf, 0, -1, false)[1]
@@ -86,8 +89,13 @@ function Adder:_set_cursor()
     vim.api.nvim_win_set_cursor(self.win_id, {1, #vim.api.nvim_buf_get_lines(self.buf, 0, -1, false)[1]})
 end
 
+function Adder:clear()
+    vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, {})
+end
+
 function Adder:close()
     vim.api.nvim_win_close(self.win_id, true)
+    --vim.api.nvim_win_close(self.title_win_id, true)
 end
 
 return Adder

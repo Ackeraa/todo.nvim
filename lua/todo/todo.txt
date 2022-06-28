@@ -1,8 +1,9 @@
-1. do first thing
-2. do second thing
-3. do third thing
-4. do fourth thing
+1. do second thing
+2. do third thing
+3. do fourth thing
+4. do sixth thing  
 5. do fifth thing
--- do one thing 2020-01-03
--- do another thing 2020-01-02
--- do yet another thing 2020-01-01
+-- do first thing @2022-06-28
+-- do one thing @2020-01-03
+-- do another thing @2020-01-02
+-- do yet another thing @2020-01-01
