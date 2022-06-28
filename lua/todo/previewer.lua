@@ -59,6 +59,36 @@ function Previewer:preview(op, arg1, arg2)
     return ""
 end
 
+function Previewer:_add(priority, task)
+    -- TODO: check if priority is valid
+    for i = #self.lines, priority, -1 do
+        if self.lines[i].priority then
+            self.lines[i + 1] = {
+                priority = self.lines[i].priority + 1,
+                task = self.lines[i].task
+            }
+        else
+            self.lines[i + 1] = self.lines[i]
+        end
+    end
+    self.lines[priority] = {
+        priority = priority,
+        task = task
+    }
+end
+
+function Previewer:_delete(priority)
+    -- TODO: check if priority is valid
+    for i = priority, #self.lines - 1 do
+        if self.lines[i].priority then
+            self.lines[i].task = self.lines[i + 1].task
+        else
+            self.lines[i] = self.lines[i + 1]
+        end
+    end
+    self.lines[#self.lines] = nil
+end
+
 function Previewer:load_file(filename)
     local file = io.open(filename, "r")
     if file then
@@ -116,25 +146,6 @@ function Previewer:_update()
     local lines = self:_repr()
     vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, lines)
     --self:save_file("lua/todo/todo.txt")
-end
-
-function Previewer:_add(priority, task)
-    -- TODO: check if priority is valid
-    for i = #self.lines, priority, -1 do
-        local line = self.lines[i]
-        if line.priority then
-            self.lines[i + 1] = {
-                priority = line.priority + 1,
-                task = line.task
-            }
-        else
-            self.lines[i + 1] = self.lines[i]
-        end
-    end
-    self.lines[priority] = {
-        priority = priority,
-        task = task
-    }
 end
 
 function Previewer:close()
