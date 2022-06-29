@@ -18,7 +18,12 @@ function Window:new()
 end
 
 function Window:setup()
+    -- TODO: ugly implementation, need to be improved
+    self:switch_window("previewer")
+    self.previewer.add_highlight()
     self:switch_window("adder")
+    self.adder.add_highlight()
+
     self:map_keys()
     self.previewer:load_file("lua/todo/todo.txt")
 end

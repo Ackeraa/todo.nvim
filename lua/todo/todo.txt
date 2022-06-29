@@ -4,7 +4,7 @@
 4. do fourth thing
 5. do sixth thing  
 6. do fifth thing
--- do first thing @2022-06-28
--- do one thing @2020-01-03
--- do another thing @2020-01-02
--- do yet another thing @2020-01-01
+  do first thing @2022-06-28
+  do one thing @2020-01-03
+  do another thing @2020-01-02
+  do yet another thing @2020-01-01

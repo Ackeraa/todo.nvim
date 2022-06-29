@@ -29,7 +29,7 @@ describe("adder", function()
             assert.is.equal(1, arg1)
             assert.is.equal(nil, arg2)
 
-            op, arg1, arg2 = adder:_parse("d 112")
+            op, arg1, arg2 = adder:_parse("de 112")
             assert.is.not_nil(op, arg1, arg2)
             assert.is.equal("delete", op)
             assert.is.equal(112, arg1)

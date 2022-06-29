@@ -27,6 +27,11 @@ function Previewer:new()
     return setmetatable(previewer, self)
 end
 
+function Previewer:add_highlight()
+    vim.fn.matchadd("TodoPriority", "^\\d\\+\\.")
+    vim.fn.matchadd("TodoDone", "^"..config.done_caret)
+end
+
 function Previewer:preview(op, arg1, arg2)
     if arg1 == nil then
         log.error("Task does not exist")
@@ -175,7 +180,7 @@ function Previewer:_parse(line)
         }
     else
         local date = line:match("@(%d+-%d+-%d+)")
-        local task = line:match("-- (.+)%s+@")
+        local task = line:match(config.done_caret.."(.+)%s+@")
         return {
             date = date,
             task = task
@@ -189,7 +194,7 @@ function Previewer:_repr()
         if line.priority then
             table.insert(lines, line.priority .. ". " .. line.task)
         else
-            table.insert(lines, "-- "..line.task.." @"..line.date)
+            table.insert(lines, config.done_caret..line.task.." @"..line.date)
         end
     end
     return lines

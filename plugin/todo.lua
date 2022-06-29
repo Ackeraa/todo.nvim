@@ -15,9 +15,14 @@ vim.g.loaded_todo = 1
 local todo = require("todo")
 
 local highlights = {
-    TodoTitle = { default = true, link = "Identifier" },
+    TodoTitle = { default = true, link = "Title" },
     TodoPrompt = { default = true, link = "Statement" },
     TodoBorder = { default = true, link = "Constant" },
+    TodoAdd = { default = true, link = "MoreMsg" },
+    TodoDelete = { default = true, link = "ErrorMsg" },
+    TodoEdit = { default = true, link = "WarningMsg" },
+    TodoDone = { default = true, link = "String" },
+    TodoPriority = { default = true, link = "MoreMsg" },
 }
 
 for k, v in pairs(highlights) do

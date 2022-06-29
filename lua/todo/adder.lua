@@ -5,40 +5,51 @@ local Adder = {}
 
 function Adder:new()
     self.__index = self
-    local _, title_win_id = self:create_title_window()
-    local _, prompt_win_id = self:create_prompt_window()
-    local _, main_win_id = self:create_main_window()
-    local buf, win_id = self:create_input_window()
+    local title_win_id = self:_create_title_window()
+    local prefix_win_id = self:_create_prefix_window()
+    local main_win_id = self:_create_main_window()
+    local buf, win_id = self:_create_input_window()
 
     local adder = {
         buf = buf,
         win_id = win_id,
         title_win_id = title_win_id,
         main_win_id = main_win_id,
-        prompt_win_id = prompt_win_id,
+        prefix_win_id = prefix_win_id,
     }
 
     return setmetatable(adder, self)
 end
 
--- TODO; rename to private
-function Adder:create_main_window()
+function Adder:add_highlight()
+    -- TODO: add some other user defined highlightings
+    local ops = { "add", "delete", "done", "edit" }
+    local hls = { "TodoAdd", "TodoDelete", "TodoDone", "TodoEdit" }
+    local pre_len = { 1, 2, 2, 1 } -- to avoid ambiguity
+    for i, op in ipairs(ops) do
+        for _, prefix in ipairs(utils.generate_prefixs(op, pre_len[i])) do
+            vim.fn.matchadd(hls[i], "^"..prefix)
+        end
+    end
+end
+
+function Adder:_create_main_window()
     local border = { "╭", "─", "╮", "│", "┤", "─", "├", "│" }
 
-    local buf, win_id = utils.create_bufwin(
+    local _, win_id = utils.create_bufwin(
             config.width, config.adder_height,
             config.row, config.col, border, 1
         )
 
     vim.api.nvim_win_set_option(win_id, "winhighlight", "NormalFloat:Normal,FloatBorder:Constant")
 
-    return buf, win_id
+    return win_id
 end
 
-function Adder:create_input_window()
+function Adder:_create_input_window()
     local buf, win_id = utils.create_bufwin(
-            config.width - #config.prompt, config.adder_height,
-            config.row + 1, config.col + #config.prompt, "none", 2
+            config.width - #config.prompt_prefix, config.adder_height,
+            config.row + 1, config.col + #config.prompt_prefix, "none", 2
         )
 
     vim.api.nvim_win_set_option(win_id, "winhighlight", "NormalFloat:Normal")
@@ -46,7 +57,7 @@ function Adder:create_input_window()
     return buf, win_id
 end
 
-function Adder:create_title_window()
+function Adder:_create_title_window()
     local buf, win_id = utils.create_bufwin(
             #config.title, 1, config.row,
             config.col + math.ceil((config.width - #config.title) / 2),
@@ -58,21 +69,21 @@ function Adder:create_title_window()
     vim.api.nvim_win_set_config(win_id, { focusable = false })
     vim.api.nvim_win_set_option(win_id, "winhighlight", "NormalFloat:Normal")
 
-    return buf, win_id
+    return win_id
 end
 
-function Adder:create_prompt_window()
+function Adder:_create_prefix_window()
     local buf, win_id = utils.create_bufwin(
-            #config.prompt, 1, config.row + 1,
+            #config.prompt_prefix, 1, config.row + 1,
             config.col + 1, "none", 2
         )
 
-    vim.api.nvim_buf_set_lines(buf, 0, -1, true, { config.prompt })
+    vim.api.nvim_buf_set_lines(buf, 0, -1, true, { config.prompt_prefix })
     vim.api.nvim_buf_add_highlight(buf, -1, "TodoPrompt", 0, 0, -1)
     vim.api.nvim_win_set_config(win_id, { focusable = false })
     vim.api.nvim_win_set_option(win_id, "winhighlight", "NormalFloat:Normal")
 
-    return buf, win_id
+    return win_id
 end
 
 function Adder:adde()
@@ -96,10 +107,10 @@ function Adder:_parse(line)
         else
             arg1 = tonumber(arg1)
         end
-    elseif string.match("delete", puop) then   -- d -> delete
+    elseif #uop > 1 and string.match("delete", puop) then 
         op = "delete"
         arg1 = tonumber(line:match("(%d+)%s*$"))
-    elseif string.match("done", puop) then
+    elseif #uop > 1 and string.match("done", puop) then
         op = "done"
         arg1 = tonumber(line:match("(%d+)%s*$"))
         arg1 = tonumber(arg1)
@@ -125,7 +136,7 @@ end
 function Adder:close()
     vim.api.nvim_win_close(self.win_id, true)
     vim.api.nvim_win_close(self.title_win_id, true)
-    vim.api.nvim_win_close(self.prompt_win_id, true)
+    vim.api.nvim_win_close(self.prefix_win_id, true)
     vim.api.nvim_win_close(self.main_win_id, true)
 end
 

@@ -2,7 +2,7 @@
 
 TODO:
 * <leader>t -> floating window
-* cmds: add, delete, done
+* cmds: add, delete, done, edit
 * mark the thing done
 * keep history
 * add date when marked done
@@ -21,3 +21,5 @@ TODO:
 * live grep
 * doc
 * call me
+* highlight add, delete, done, edit
+* Just finished the job, but the implementation is not elegant.

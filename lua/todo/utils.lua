@@ -22,4 +22,13 @@ utils.create_bufwin = function(width, height, row, col, border, zindex)
     return buf, win_id
 end
 
+utils.generate_prefixs = function(str, start)
+    local prefix = {}
+    for i = start, #str do
+        table.insert(prefix, str:sub(1, i))
+    end
+
+    return prefix
+end
+
 return utils
