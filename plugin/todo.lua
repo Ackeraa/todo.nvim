@@ -14,7 +14,15 @@ vim.g.loaded_todo = 1
 -- Be careful to not overuse this file!
 local todo = require("todo")
 
-vim.highlight.create("Border", { ctermbg = 0, guifg = darkgreen }, false)
+local highlights = {
+    TodoTitle = { default = true, link = "Identifier" },
+    TodoPrompt = { default = true, link = "Statement" },
+    TodoBorder = { default = true, link = "Constant" },
+}
+
+for k, v in pairs(highlights) do
+  vim.api.nvim_set_hl(0, k, v)
+end
 
 vim.api.nvim_create_user_command(
   "Todo",

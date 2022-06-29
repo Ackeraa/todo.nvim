@@ -13,8 +13,7 @@ function Previewer:new()
 
     vim.api.nvim_win_set_option(win_id, "cursorline", true)
 
-    vim.highlight.create("Border", { guifg = "#19e6e6" }, false)
-    vim.api.nvim_win_set_option(win_id, "winhighlight", "NormalFloat:Normal,FloatBorder:Border")
+    vim.api.nvim_win_set_option(win_id, "winhighlight", "NormalFloat:Normal,FloatBorder:TodoBorder")
     -- local new_pos = vim.api.nvim_win_get_cursor(win_id)[1]
 
     local previewer = {
