@@ -30,6 +30,7 @@ end
 function Previewer:add_highlight()
     vim.fn.matchadd("TodoPriority", "^\\d\\+\\.")
     vim.fn.matchadd("TodoDone", "^"..config.done_caret)
+    vim.fn.matchadd("TodoDate", "@\\d\\+-\\d\\+-\\d\\+")
 end
 
 function Previewer:preview(op, arg1, arg2)
@@ -180,7 +181,7 @@ function Previewer:_parse(line)
         }
     else
         local date = line:match("@(%d+-%d+-%d+)")
-        local task = line:match(config.done_caret.."(.+)%s+@")
+        local task = line:match("@%d+-%d+-%d+%s+(.+)$")
         return {
             date = date,
             task = task
@@ -194,7 +195,7 @@ function Previewer:_repr()
         if line.priority then
             table.insert(lines, line.priority .. ". " .. line.task)
         else
-            table.insert(lines, config.done_caret..line.task.." @"..line.date)
+            table.insert(lines, config.done_caret.." @"..line.date.." "..line.task)
         end
     end
     return lines

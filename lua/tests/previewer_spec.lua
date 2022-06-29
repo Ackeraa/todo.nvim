@@ -1,6 +1,7 @@
 describe("previewer", function()
     local previewer = require("todo.previewer"):new()
     local filename = "lua/tests/todo.txt"
+    local config = require("todo.config")
     before_each(function()
         local file = io.open(filename, "w")
         if file then
@@ -10,9 +11,9 @@ describe("previewer", function()
                 "3. do something else else",
                 "4. do something else else else",
                 "5. do something else else else else",
-                "-- done something @2016-01-01",
-                "-- done something else @2016-01-01",
-                "-- done something else else @2016-01-01",
+                config.done_caret.."@2016-01-01 done something",
+                config.done_caret.."@2016-01-01 done something else",
+                config.done_caret.."@2016-01-01 done something else else",
             }
             for _, line in ipairs(lines) do
                 file:write(line .. "\n")
@@ -28,7 +29,7 @@ describe("previewer", function()
             assert.is.equal(1, line.priority)
             assert.is.equal("123 hello", line.task)
 
-            line = previewer:_parse("-- 123 hello @2016-01-01")
+            line = previewer:_parse(config.done_caret.." @2016-01-01 123 hello")
             assert.is.not_nil(line)
             assert.is.equal(nil, line.priority)
             assert.is.equal("123 hello", line.task)
@@ -90,7 +91,7 @@ describe("previewer", function()
             assert.is.equal("do something else else else else", previewer.lines[2].task)
             assert.is.equal(2, previewer.lines[2].priority)
             assert.is.equal("do something else else", previewer.lines[3].task)
-            assert.is.equal("2022-06-28", previewer.lines[3].date)
+            assert.is.equal(os.date("%Y-%m-%d"), previewer.lines[3].date)
             assert.is.equal("do something else", previewer.lines[4].task)
             assert.is.equal(8, #previewer.lines)
         end)

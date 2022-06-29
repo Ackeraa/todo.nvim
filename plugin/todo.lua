@@ -23,6 +23,7 @@ local highlights = {
     TodoEdit = { default = true, link = "WarningMsg" },
     TodoDone = { default = true, link = "String" },
     TodoPriority = { default = true, link = "MoreMsg" },
+    TodoDate = { default = true, link = "Comment" },
 }
 
 for k, v in pairs(highlights) do
