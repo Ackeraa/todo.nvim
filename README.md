@@ -8,9 +8,7 @@ use { 'ackeraa/todo.nvim' }
 ```
 ## Setup
 This plugin must be explicitly enabled by using `require("todo").setup{}`
-
-You must pass the |file_path| to specify the where do you want to save of
-the to-do list, for example: 
+You must pass the `file_path` to specify the where do you want to save of the to-do list. 
 ```lua
 require("todo").setup {
     file_path = "path/to/save/todo.txt"
@@ -80,7 +78,12 @@ Hints: ~
 
                                                               *todo-extension*
 
-
+|                    commands                    |               Action                |                          Parameters                           |
+| :--------------------------------------------: | :---------------------------------: | :----------------------------------------------------------: |
+|            `add {priority} {to-do}`            |           Add a new to-do           | {priority}: Priority of the new to-do, defaults to 0<br>{to-do}:  Contents of the new to-do |
+|              `delete {priority}`               |           Delete a to-do            |       {priority}:  Priority of the to-do to be deleted       |
+|               `done {priority}`                |        Mark a to-do as done         |    {priority}:  Priority of the to-do that has been done     |
+| `edit {priority} {new-to-do}|/|{new-priority}` | Edit a to-do's priority or contents | {priority}     Priority of the to-do to be edited<br/>{new-to-do}    The new contents of the to-do <br/>{new-priority} The new priority of the to-do |
 
 
 TODO:
