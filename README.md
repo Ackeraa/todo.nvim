@@ -2,7 +2,7 @@
 This plugin helps you manage your to-do list while working in neovim, purely written in lua.
 
 <p align="center">
-    <img src=""  width="40%" height="40%" />
+    <img src="https://user-images.githubusercontent.com/47852787/176720169-eabd0f50-afab-4ff7-82a6-ea18b0b80af8.gif" width="70%" height="70%">
 </p>
 
 ## Installation
