@@ -22,10 +22,10 @@ There are four types of commands can be used in the floating window:
 
 | commands                                     | Action                              | Parmeters                                                    |
 | :------------------------------------------- | :---------------------------------- | :----------------------------------------------------------- |
-| `add {priority} {to-do}`                     | Add a new to-do                     | {priority}: Priority of the new to-do, defaults to 0<br>{to-do}:  Contents of the new to-do |
-| `delete {priority}`                          | Delete a to-do                      | {priority}:  Priority of the to-do to be deleted             |
-| `done {priority}`                            | Mark a to-do as done                | {priority}:  Priority of the to-do that has been done        |
-| `edit {priority} {new-to-do}/{new-priority}` | Edit a to-do's priority or contents | {priority}:  Priority of the to-do to be edited<br/>{new-to-do}: The new contents of the to-do <br/>{new-priority}: The new priority of the to-do |
+| `add {priority} {to-do}`                     | Add a new to-do                     | `{priority}`: Priority of the new to-do, defaults to 0<br>{to-do}:  Contents of the new to-do |
+| `delete {priority}`                          | Delete a to-do                      | `{priority}`:  Priority of the to-do to be deleted             |
+| `done {priority}`                            | Mark a to-do as done                | `{priority}`:  Priority of the to-do that has been done        |
+| `edit {priority} {new-to-do}/{new-priority}` | Edit a to-do's priority or contents | `{priority}`:  Priority of the to-do to be edited<br/>`{new-to-do}`: The new contents of the to-do <br/>`{new-priority}`: The new priority of the to-do |
 
 TODO:
 * <leader>t -> floating window
