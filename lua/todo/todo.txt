@@ -1,11 +1,2 @@
-1. do first thing
-2. do second thing
-3. do third thing
-4. do fourth thing
-5. do sixth thing  
-6. do fifth thing
-  @2022-06-29 do first
-  @2022-06-28 do first thing
-  @2022-06-28 do one thing
-  @2022-06-28 do another thing
-  @2022-06-28 do yet another
+  @2022-06-30 do another thing
+  @2022-06-30 do new one thing

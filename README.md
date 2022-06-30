@@ -1,6 +1,10 @@
 # todo.nvim
 This plugin helps you manage your to-do list while working in neovim, purely written in lua.
 
+<p align="center">
+    <img src=""  width="40%" height="40%" />
+</p>
+
 ## Installation
 Using packer
 ```lua
