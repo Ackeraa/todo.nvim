@@ -30,35 +30,14 @@ There are four types of commands can be used in the floating window:
 Examples:
 * `add do one thing`: Add the first to-do(`{priority}` defaults to 1)
 * `add 2 do another thing`: Add the second to-do
-* `edit 1 2`: Change the first to-do's priority to 2, now the second to-do's priority becomes 1
+* `edit 1 2`: Change the first to-do's priority to 2, the previous second to-do's priority becomes 1
 * `edit 2 do the new one thing`: Change second to-do's contents  
 * `delete 2`: Delete the second to-do
 * `done 1`: Mark the first to-do as done
 
 See doc for details.
 
-TODO:
-* <leader>t -> floating window
-* cmds: add, delete, done, edit
-* mark the thing done
-* keep history
-* add date when marked done
-* add priority: (1)(2)(3)
-* upload to server or icloud
-* example:
-    * add 1 finish master-vim
-    * delete 1 / delete text
-    * done 1 / done text
-    * edit 1 new text / edit 1 2
-
-* saved file format: 
-    * 1. do something
-    * 2. do another something
-    * -- something has been done @2022.6.27
-* live grep
-* doc
-* call me
-* highlight add, delete, done, edit
+## TODO
 * Just finished the job, but the implementation is not elegant.
-* checkhealth
+* Improve the code structure
 
