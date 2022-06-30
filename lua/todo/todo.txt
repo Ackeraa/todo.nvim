@@ -1,4 +1,4 @@
-1. add some comment
+1. do first thing
 2. do second thing
 3. do third thing
 4. do fourth thing

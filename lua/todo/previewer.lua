@@ -14,7 +14,6 @@ function Previewer:new()
     vim.api.nvim_win_set_option(win_id, "cursorline", true)
 
     vim.api.nvim_win_set_option(win_id, "winhighlight", "NormalFloat:Normal,FloatBorder:TodoBorder")
-    -- local new_pos = vim.api.nvim_win_get_cursor(win_id)[1]
 
     local previewer = {
         buf = buf,
@@ -144,8 +143,8 @@ function Previewer:_edit(priority, task_or_priority)
     end
 end
 
-function Previewer:load_file(filename)
-    local file = io.open(filename, "r")
+function Previewer:load_file()
+    local file = io.open(config.file_path, "r")
     if file then
         for line in file:lines() do
             line = self:_parse(line)
@@ -159,8 +158,8 @@ function Previewer:load_file(filename)
     end
 end
 
-function Previewer:save_file(filename)
-    local file = io.open(filename, "w")
+function Previewer:save_file()
+    local file = io.open(config.file_path, "w")
     if file then
         local lines = self:_repr()
         for _, line in ipairs(lines) do
@@ -168,7 +167,7 @@ function Previewer:save_file(filename)
         end
         file:close()
     else
-        log.error("Failed to open file: ", filename)
+        log.error("Failed to open file: ", config.file_path)
     end
 end
 
@@ -204,7 +203,6 @@ end
 function Previewer:_update()
     local lines = self:_repr()
     vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, lines)
-    --self:save_file("lua/todo/todo.txt")
 end
 
 function Previewer:close()

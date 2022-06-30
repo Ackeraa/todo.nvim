@@ -3,17 +3,22 @@ local M = {}
 
 function M.open()
 
+    -- for debug purpose
     RELOAD("todo.adder")
     RELOAD("todo.previewer")
     RELOAD("todo.window")
     RELOAD("todo.utils")
     RELOAD("todo.config")
-    local Window = require("todo.window")
-    local window = Window:new()
-    M.window = window
-    window:setup()
+    if M.window == nil or M.window.adder == nil then
+        M.setup()
+        M.window = require("todo.window"):new()
+        M.window:setup()
+    end
+end
 
-    return window
+function M.setup(opts)
+    opts = opts or {}
+    require("todo.config").setup(opts)
 end
 
 return M

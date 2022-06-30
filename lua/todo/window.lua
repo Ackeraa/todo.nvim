@@ -4,8 +4,6 @@ local Previewer = require("todo.previewer")
 local Window = {}
 
 function Window:new()
-    -- TODO: check if window is already open
-
     local previewer = Previewer:new()
     local adder = Adder:new()
 
@@ -25,7 +23,7 @@ function Window:setup()
     self.adder.add_highlight()
 
     self:map_keys()
-    self.previewer:load_file("lua/todo/todo.txt")
+    self.previewer:load_file()
 end
 
 function Window:switch_window(which)
@@ -39,10 +37,9 @@ end
 
 function Window:doit()
     op, arg1, arg2 = self.adder:adde()
-    rst = self.previewer:preview(op, arg1, arg2)
-    self.previewer:save_file("lua/todo/todo.txt")
+    self.previewer:preview(op, arg1, arg2)
+    self.previewer:save_file()
     self.adder:clear()
-    return ""
 end
 
 function Window:map_keys()
@@ -63,9 +60,10 @@ end
 
 
 function Window:close()
-    -- TODO: return back to the last window
     self.adder:close()
     self.previewer:close()
+    self.adder = nil
+    self.previewer = nil
 end
 
 return Window
