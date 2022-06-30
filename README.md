@@ -35,7 +35,7 @@ Examples:
 * `delete 2`: Delete the second to-do
 * `done 1`: Mark the first to-do as done
 
-See doc for details.
+See [doc](https://github.com/Ackeraa/todo.nvim/blob/main/doc/todo.txt) for more details.
 
 ## TODO
 * Just finished the job, but the implementation is not elegant.
