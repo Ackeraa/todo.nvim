@@ -8,7 +8,7 @@ local height = vim.api.nvim_get_option("lines")
 config.title = " TODO "
 config.prompt_prefix = " "
 config.done_caret = " "
-config.file_path = "lua/todo/todo.txt"
+config.file_path = nil
 config.adder_height = 1
 config.previewer_height = math.ceil(height * 0.3)
 config.width = math.ceil(width * 0.5)
@@ -28,10 +28,10 @@ config.highlights = {
 }
 
 config.setup = function(opts)
-    --[[ if opts.file_path == nil then
+    if opts.file_path == nil then
         log.error("Todo file path is not specified")
         return nil
-    end ]]
+    end
     config = vim.tbl_deep_extend("force", config, opts)
 
     for k, v in pairs(config.highlights) do
