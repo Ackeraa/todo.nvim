@@ -29,7 +29,7 @@ There are four types of commands can be used in the floating window:
     |add| {priority} {to-do}
         Add a new to-do 
 
-        Parmeters: ~
+        Parameters: ~
             {priority}  Priority of the new to-do, defaults to 0
             {to-do}     Contents of the new to-do
 
@@ -43,7 +43,7 @@ There are four types of commands can be used in the floating window:
     |delete| {priority}
         Delete a to-do
 
-        Parmeters: ~
+        Parameters: ~
             {priority}  Priority of the to-do to be deleted
 
         Examples: ~
@@ -56,7 +56,7 @@ There are four types of commands can be used in the floating window:
     |done| {priority}
         Mark a to-do as done
 
-        Parmeters: ~
+        Parameters: ~
             {priority}  Priority of the to-do that has been done
 
         Examples: ~
@@ -69,7 +69,7 @@ There are four types of commands can be used in the floating window:
     |edit| {priority} {new-to-do}|/|{new-priority}
         Edit a to-do's priority or contents
 
-        Parmeters: ~
+        Parameters: ~
             {priority}     Priority of the to-do to be edited
             {new-to-do}    The new contents of the to-do 
             {new-priority} The new priority of the to-do
