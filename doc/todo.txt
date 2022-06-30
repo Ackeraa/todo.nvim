@@ -30,7 +30,7 @@ There are four types of commands can be used in the floating window:
         Add a new to-do 
 
         Parameters: ~
-            {priority}  Priority of the new to-do, defaults to 0
+            {priority}  Priority of the new to-do, defaults to 1
             {to-do}     Contents of the new to-do
 
         Examples: ~

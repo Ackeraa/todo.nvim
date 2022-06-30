@@ -20,12 +20,22 @@ Use the command `:Todo` to start.
 
 There are four types of commands can be used in the floating window:
 
-| commands                                     | Action                              | Parmeters                                                    |
-| :------------------------------------------- | :---------------------------------- | :----------------------------------------------------------- |
-| `add {priority} {to-do}`                     | Add a new to-do                     | `{priority}`: Priority of the new to-do, defaults to 0<br>{to-do}:  Contents of the new to-do |
-| `delete {priority}`                          | Delete a to-do                      | `{priority}`:  Priority of the to-do to be deleted             |
-| `done {priority}`                            | Mark a to-do as done                | `{priority}`:  Priority of the to-do that has been done        |
-| `edit {priority} {new-to-do}/{new-priority}` | Edit a to-do's priority or contents | `{priority}`:  Priority of the to-do to be edited<br/>`{new-to-do}`: The new contents of the to-do <br/>`{new-priority}`: The new priority of the to-do |
+| commands                                     | Action                              |
+| :------------------------------------------- | :---------------------------------- |
+| `add {priority} {to-do}`                     | Add a new to-do                     |
+| `delete {priority}`                          | Delete a to-do                      |
+| `done {priority}`                            | Mark a to-do as done                |
+| `edit {priority} {new-to-do}/{new-priority}` | Edit a to-do's priority or contents |
+
+Examples:
+* `add do one thing`: Add the first to-do(`{priority}` defaults to 1)
+* `add 2 do another thing`: Add the second to-do
+* `edit 1 2`: Change the first to-do's priority to 2, now the second to-do's priority becomes 1
+* `edit 2 do the new one thing`: Change second to-do's contents  
+* `delete 2`: Delete the second to-do
+* `done 1`: Mark the first to-do as done
+
+See doc for details.
 
 TODO:
 * <leader>t -> floating window
