@@ -9,6 +9,7 @@ config.opts = {
     title = " TODO ",
     prompt_prefix = " ",
     done_caret = " ",
+    upload_to_reminder = false,
     adder_height = 1,
     previewer_height = math.ceil(height * 0.3),
     width = math.ceil(width * 0.5),

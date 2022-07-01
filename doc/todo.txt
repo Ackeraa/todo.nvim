@@ -10,6 +10,9 @@ Getting started with todo:
        to-do list file.
     2. Run `:Todo` to start.
 
+For Mac OS users, you can load your to-do list to Reminder, see
+*todo-extension* for more details.
+
                                                            *todo-requirements*
 This plugin works in Neovim 0.7 or higher.
 
@@ -85,8 +88,20 @@ There are four types of commands can be used in the floating window:
           - pass either {new-to-do} or {new-priority}, but not both
 
                                                               *todo-extension*
+For Mac OS users, you can load your to-do list to Reminder, do as fllows:
 
-
-
+    1. Create a list called "Todo" in your Reminder.
+    2. Setup as fllows:
+        >
+        require("todo").setup {
+            opts = {
+                file_path = "path/to/save/todo.txt",
+                load_to_reminder = true,
+            },
+        }
+<
+Hints: ~
+    - For now, only supports reminder on Mac
+    - Anything you change in your Reminder will not affect your to-do list file
 
  vim:tw=78:ts=8:ft=help:norl:

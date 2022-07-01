@@ -170,6 +170,10 @@ end
 
 function Previewer:close()
     vim.api.nvim_win_close(self.win_id, true)
+    if self.opts.upload_to_reminder then
+        local reminder = require("todo.extensions.reminder")
+        reminder.write_to_reminder(self.opts.file_path)
+    end
 end
 
 return Previewer

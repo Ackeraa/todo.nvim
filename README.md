@@ -1,9 +1,14 @@
 # todo.nvim
 This plugin helps you manage your to-do list while working in neovim, purely written in lua.
 
+For Mac OS users, you can load your to-do list to Reminder, see [Extension](#extension)
+
 <p align="center">
     <img src="https://user-images.githubusercontent.com/47852787/176720169-eabd0f50-afab-4ff7-82a6-ea18b0b80af8.gif" width="80%" height="80%">
 </p>
+
+## Requirements
+This plugin works in Neovim 0.7 or higher.
 
 ## Installation
 Using packer
@@ -42,6 +47,21 @@ Examples:
 * `done 1`: Mark the first to-do as done
 
 See [doc](https://github.com/Ackeraa/todo.nvim/blob/main/doc/todo.txt) for more details.
+
+## Extension
+For Mac OS users, you can load your to-do list to Reminder, do as follows:
+
+* Create a list called "Todo" in your Reminder.
+* Setup as follows:
+```lua
+    require("todo").setup {
+        opts = {
+            file_path = "path/to/save/todo.txt",
+            load_to_reminder = true,
+        },
+    }
+```
+For now, only supports reminder on Mac, and anything you change in your Reminder will not affect your to-do list file.
 
 ## TODO
 * Just finished the job, but the implementation is not elegant.
