@@ -1,5 +1,5 @@
 # todo.nvim
-This plugin helps you manage your to-do list while working in neovim, purely written in lua.
+This plugin helps you manage your to-do list while working in neovim.
 For Mac OS users, you can load your to-do list to Reminder, see [Extension](#extension)
 
 <p align="center">
@@ -48,10 +48,10 @@ Examples:
 See [doc](https://github.com/Ackeraa/todo.nvim/blob/main/doc/todo.txt) for more details.
 
 ## Extension
-For Mac OS users, you can load your to-do list to Reminder, do as follows:
+Mac OS users can load the to-do list to Reminder as follows:
 
 * Create a list called "Todo" in your Reminder.
-* Setup as follows:
+* Set `load_to_reminder = true`
 ```lua
     require("todo").setup {
         opts = {
@@ -60,7 +60,7 @@ For Mac OS users, you can load your to-do list to Reminder, do as follows:
         },
     }
 ```
-*Hint*: Anything you change in your Reminder will not affect your to-do list file.
+**Hint**: Anything you change in your Reminder will not affect your to-do list file.
 
 ## TODO
 * Just finished the job, but the implementation is not elegant.
