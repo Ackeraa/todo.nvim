@@ -1,10 +1,10 @@
 local utils = require("todo.utils")
-local config = require("todo.config")
 
 local Adder = {}
 
-function Adder:new()
+function Adder:new(opts)
     self.__index = self
+    self.opts = opts
     local title_win_id = self:_create_title_window()
     local prefix_win_id = self:_create_prefix_window()
     local main_win_id = self:_create_main_window()
@@ -37,8 +37,8 @@ function Adder:_create_main_window()
     local border = { "╭", "─", "╮", "│", "┤", "─", "├", "│" }
 
     local _, win_id = utils.create_bufwin(
-            config.width, config.adder_height,
-            config.row, config.col, border, 1
+            self.opts.width, self.opts.adder_height,
+            self.opts.row, self.opts.col, border, 1
         )
 
     vim.api.nvim_win_set_option(win_id, "winhighlight", "NormalFloat:Normal,FloatBorder:Constant")
@@ -48,8 +48,8 @@ end
 
 function Adder:_create_input_window()
     local buf, win_id = utils.create_bufwin(
-            config.width - #config.prompt_prefix, config.adder_height,
-            config.row + 1, config.col + #config.prompt_prefix, "none", 2
+            self.opts.width - #self.opts.prompt_prefix, self.opts.adder_height,
+            self.opts.row + 1, self.opts.col + #self.opts.prompt_prefix, "none", 2
         )
 
     vim.api.nvim_win_set_option(win_id, "winhighlight", "NormalFloat:Normal")
@@ -59,12 +59,12 @@ end
 
 function Adder:_create_title_window()
     local buf, win_id = utils.create_bufwin(
-            #config.title, 1, config.row,
-            config.col + math.ceil((config.width - #config.title) / 2),
+            #self.opts.title, 1, self.opts.row,
+            self.opts.col + math.ceil((self.opts.width - #self.opts.title) / 2),
             "none", 2
         )
 
-    vim.api.nvim_buf_set_lines(buf, 0, -1, true, { config.title })
+    vim.api.nvim_buf_set_lines(buf, 0, -1, true, { self.opts.title })
     vim.api.nvim_buf_add_highlight(buf, -1, "TodoTitle", 0, 0, -1)
     vim.api.nvim_win_set_config(win_id, { focusable = false })
     vim.api.nvim_win_set_option(win_id, "winhighlight", "NormalFloat:Normal")
@@ -74,11 +74,11 @@ end
 
 function Adder:_create_prefix_window()
     local buf, win_id = utils.create_bufwin(
-            #config.prompt_prefix, 1, config.row + 1,
-            config.col + 1, "none", 2
+            #self.opts.prompt_prefix, 1, self.opts.row + 1,
+            self.opts.col + 1, "none", 2
         )
 
-    vim.api.nvim_buf_set_lines(buf, 0, -1, true, { config.prompt_prefix })
+    vim.api.nvim_buf_set_lines(buf, 0, -1, true, { self.opts.prompt_prefix })
     vim.api.nvim_buf_add_highlight(buf, -1, "TodoPrompt", 0, 0, -1)
     vim.api.nvim_win_set_config(win_id, { focusable = false })
     vim.api.nvim_win_set_option(win_id, "winhighlight", "NormalFloat:Normal")

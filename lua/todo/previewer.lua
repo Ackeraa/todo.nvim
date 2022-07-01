@@ -1,14 +1,15 @@
 local log = require("todo.log")
 local utils = require("todo.utils")
-local config = require("todo.config")
 
 local Previewer = {}
 
-function Previewer:new()
+function Previewer:new(opts)
+    self.__index = self
+    self.opts = opts
     local border = { "├", "─", "┤", "│", "╯", "─", "╰", "│" }
     local buf, win_id = utils.create_bufwin(
-            config.width, config.previewer_height,
-            config.row + 2, config.col, border, 1
+            opts.width, opts.previewer_height,
+            opts.row + 2, opts.col, border, 1
         )
 
     vim.api.nvim_win_set_option(win_id, "cursorline", true)
@@ -21,14 +22,12 @@ function Previewer:new()
         lines = {},
         todos = 0,
     }
-    self.__index = self
-
     return setmetatable(previewer, self)
 end
 
 function Previewer:add_highlight()
     vim.fn.matchadd("TodoPriority", "^\\d\\+\\.")
-    vim.fn.matchadd("TodoDone", "^"..config.done_caret)
+    vim.fn.matchadd("TodoDone", "^"..self.opts.done_caret)
     vim.fn.matchadd("TodoDate", "@\\d\\+-\\d\\+-\\d\\+")
 end
 
@@ -144,7 +143,7 @@ function Previewer:_edit(priority, task_or_priority)
 end
 
 function Previewer:load_file()
-    local file = io.open(config.file_path, "r")
+    local file = io.open(self.opts.file_path, "r")
     if file then
         for line in file:lines() do
             line = self:_parse(line)
@@ -159,7 +158,7 @@ function Previewer:load_file()
 end
 
 function Previewer:save_file()
-    local file = io.open(config.file_path, "w")
+    local file = io.open(self.opts.file_path, "w")
     if file then
         local lines = self:_repr()
         for _, line in ipairs(lines) do
@@ -167,7 +166,7 @@ function Previewer:save_file()
         end
         file:close()
     else
-        log.error("Failed to open file: ", config.file_path)
+        log.error("Failed to open file: ", self.opts.file_path)
     end
 end
 
@@ -194,7 +193,7 @@ function Previewer:_repr()
         if line.priority then
             table.insert(lines, line.priority .. ". " .. line.task)
         else
-            table.insert(lines, config.done_caret.." @"..line.date.." "..line.task)
+            table.insert(lines, self.opts.done_caret.." @"..line.date.." "..line.task)
         end
     end
     return lines

@@ -3,9 +3,9 @@ local Previewer = require("todo.previewer")
 
 local Window = {}
 
-function Window:new()
-    local previewer = Previewer:new()
-    local adder = Adder:new()
+function Window:new(opts)
+    local previewer = Previewer:new(opts)
+    local adder = Adder:new(opts)
 
     local window = {
         adder = adder,
@@ -18,7 +18,7 @@ end
 function Window:setup()
     -- TODO: ugly implementation, need to be improved
     self:switch_window("previewer")
-    self.previewer.add_highlight()
+    self.previewer:add_highlight()
     self:switch_window("adder")
     self.adder.add_highlight()
 

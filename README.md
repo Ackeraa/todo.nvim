@@ -15,7 +15,9 @@ This plugin must be explicitly enabled by using `require("todo").setup{}`
 You must pass the `file_path` to specify the where do you want to save of the to-do list. 
 ```lua
 require("todo").setup {
-    file_path = "path/to/save/todo.txt"
+    opts = {
+        file_path = "path/to/save/todo.txt"
+    },
 }
 ```
 

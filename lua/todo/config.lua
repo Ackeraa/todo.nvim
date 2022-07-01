@@ -5,15 +5,17 @@ local config = {}
 local width = vim.api.nvim_get_option("columns")
 local height = vim.api.nvim_get_option("lines")
 
-config.title = " TODO "
-config.prompt_prefix = " "
-config.done_caret = " "
-config.file_path = nil
-config.adder_height = 1
-config.previewer_height = math.ceil(height * 0.3)
-config.width = math.ceil(width * 0.5)
-config.row = math.ceil((height - config.adder_height - config.previewer_height) / 2) - 1
-config.col = math.ceil((width - config.width) / 2)
+config.opts = {
+    title = " TODO ",
+    prompt_prefix = " ",
+    done_caret = " ",
+    adder_height = 1,
+    previewer_height = math.ceil(height * 0.3),
+    width = math.ceil(width * 0.5),
+    row = math.ceil((height * 0.7 - 1) / 2) - 1,
+    col = math.ceil((width * 0.5) / 2),
+    file_path = 1,
+}
 
 config.highlights = {
     TodoTitle = { default = true, link = "Title" },
@@ -27,16 +29,19 @@ config.highlights = {
     TodoDate = { default = true, link = "Comment" },
 }
 
-config.setup = function(opts)
-    if opts.file_path == nil then
+config.setup = function(custom_config)
+    if custom_config.opts == nil or custom_config.opts.file_path == nil then
         log.error("Todo file path is not specified")
         return nil
     end
-    config = vim.tbl_deep_extend("force", config, opts)
+
+    config = vim.tbl_deep_extend("force", config, custom_config)
 
     for k, v in pairs(config.highlights) do
       vim.api.nvim_set_hl(0, k, v)
     end
+
+    return config
 end
 
 return config
