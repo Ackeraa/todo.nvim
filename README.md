@@ -1,5 +1,5 @@
 # todo.nvim
-This plugin helps you manage your to-do list while working in neovim.
+It helps you manage your to-do list while working in neovim.
 For Mac OS users, you can load your to-do list to Reminder, see [Extension](#extension)
 
 <p align="center">
@@ -7,7 +7,7 @@ For Mac OS users, you can load your to-do list to Reminder, see [Extension](#ext
 </p>
 
 ## Requirements
-This plugin works in Neovim 0.7 or higher.
+* Neovim 0.7 or higher.
 
 ## Installation
 Using packer
@@ -16,7 +16,7 @@ use { 'ackeraa/todo.nvim' }
 ```
 ## Setup
 This plugin must be explicitly enabled by using `require("todo").setup{}`.
-You must pass the `file_path` to specify the where do you want to save of the to-do list. 
+Pass the `file_path` to specify the where do you want to save of the to-do list. 
 ```lua
 require("todo").setup {
     opts = {
