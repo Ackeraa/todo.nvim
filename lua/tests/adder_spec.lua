@@ -1,6 +1,7 @@
 describe("adder", function()
 
-    local adder = require("todo.adder"):new()
+    local opts = require("todo.config").opts
+    local adder = require("todo.adder"):new(opts)
     describe("parse", function()
         it("can parse add command", function()
             local op, arg1, arg2 = adder:_parse("add 1 hello")

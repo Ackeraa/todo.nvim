@@ -1,7 +1,8 @@
 describe("previewer", function()
-    local previewer = require("todo.previewer"):new()
+    local opts = require("todo.config").opts
     local filename = "lua/tests/todo.txt"
-    local config = require("todo.config")
+    opts.file_path = filename
+    local previewer = require("todo.previewer"):new(opts)
     before_each(function()
         local file = io.open(filename, "w")
         if file then
@@ -11,9 +12,9 @@ describe("previewer", function()
                 "3. do something else else",
                 "4. do something else else else",
                 "5. do something else else else else",
-                config.done_caret.."@2016-01-01 done something",
-                config.done_caret.."@2016-01-01 done something else",
-                config.done_caret.."@2016-01-01 done something else else",
+                opts.done_caret.."@2016-01-01 done something",
+                opts.done_caret.."@2016-01-01 done something else",
+                opts.done_caret.."@2016-01-01 done something else else",
             }
             for _, line in ipairs(lines) do
                 file:write(line .. "\n")
@@ -29,7 +30,7 @@ describe("previewer", function()
             assert.is.equal(1, line.priority)
             assert.is.equal("123 hello", line.task)
 
-            line = previewer:_parse(config.done_caret.." @2016-01-01 123 hello")
+            line = previewer:_parse(opts.done_caret.." @2016-01-01 123 hello")
             assert.is.not_nil(line)
             assert.is.equal(nil, line.priority)
             assert.is.equal("123 hello", line.task)
@@ -39,22 +40,22 @@ describe("previewer", function()
 
     describe("file method", function()
         it("can load the todo file", function()
-            previewer:load_file(filename)
+            previewer:load_file()
             assert.is.equal(8, #previewer.lines)
         end)
 
         it("can write the todo file", function()
-            previewer = require("todo.previewer"):new()
-            previewer:load_file(filename)
-            previewer:save_file(filename)
+            previewer = require("todo.previewer"):new(opts)
+            previewer:load_file()
+            previewer:save_file()
             assert.is.equal(8, #previewer.lines)
         end)
     end)
 
     describe("preview method", function()
         it("should add task right", function()
-            previewer = require("todo.previewer"):new()
-            previewer:load_file(filename)
+            previewer = require("todo.previewer"):new(opts)
+            previewer:load_file()
             previewer:preview("add", 1, "task1")
             previewer:preview("add", 3, "task3")
             previewer:preview("add", 5, "task5")
@@ -67,8 +68,8 @@ describe("previewer", function()
         end)
 
         it("should delete task right", function()
-            previewer = require("todo.previewer"):new()
-            previewer:load_file(filename)
+            previewer = require("todo.previewer"):new(opts)
+            previewer:load_file()
             previewer:preview("delete", 1)
             previewer:preview("delete", 2)
             previewer:preview("delete", 3)
@@ -81,8 +82,8 @@ describe("previewer", function()
         end)
 
         it("should done task right", function()
-            previewer = require("todo.previewer"):new()
-            previewer:load_file(filename)
+            previewer = require("todo.previewer"):new(opts)
+            previewer:load_file()
             previewer:preview("done", 1)
             previewer:preview("done", 1)
             previewer:preview("done", 1)
@@ -97,8 +98,8 @@ describe("previewer", function()
         end)
 
         it("should edit task right", function()
-            previewer = require("todo.previewer"):new()
-            previewer:load_file(filename)
+            previewer = require("todo.previewer"):new(opts)
+            previewer:load_file()
             previewer:preview("edit", 1, "task1")
             previewer:preview("edit", 2, "task2")
             assert.is.equal("task1", previewer.lines[1].task)
