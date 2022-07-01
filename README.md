@@ -51,12 +51,12 @@ See [doc](https://github.com/Ackeraa/todo.nvim/blob/main/doc/todo.txt) for more 
 Mac OS users can load the to-do list to Reminder as follows:
 
 * Create a list called "Todo" in your Reminder.
-* Set `load_to_reminder = true`
+* Set `upload_to_reminder = true`
 ```lua
     require("todo").setup {
         opts = {
             file_path = "path/to/save/todo.txt",
-            load_to_reminder = true,
+            upload_to_reminder = true,
         },
     }
 ```

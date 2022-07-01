@@ -96,7 +96,7 @@ For Mac OS users, you can load your to-do list to Reminder, do as fllows:
         require("todo").setup {
             opts = {
                 file_path = "path/to/save/todo.txt",
-                load_to_reminder = true,
+                upload_to_reminder = true,
             },
         }
 <
