@@ -59,24 +59,14 @@ function Previewer:_add(priority, task)
         log.error("Task priority is too high")
         return
     end
-    -- shift dones
-    for i = #self.lines, self.todos + 1, -1 do
+
+    -- shift
+    for i = #self.lines, priority, -1 do
         self.lines[i + 1] = self.lines[i]
     end
 
-    -- shift todos after priority
-    for i = self.todos, priority, -1 do
-        self.lines[i + 1] = {
-            priority = self.lines[i].priority + 1,
-            task = self.lines[i].task
-        }
-    end
-
     -- add new task
-    self.lines[priority] = {
-        priority = priority,
-        task = task
-    }
+    self.lines[priority] = task
     self.todos = self.todos + 1
 end
 
@@ -86,13 +76,8 @@ function Previewer:_delete(priority)
         return
     end
 
-    -- shift todos
-    for i = priority, self.todos - 1 do
-        self.lines[i].task = self.lines[i + 1].task
-    end
-
-    -- shift dones
-    for i = self.todos, #self.lines - 1 do
+    -- shift
+    for i = priority, #self.lines - 1 do
         self.lines[i] = self.lines[i + 1]
     end
 
@@ -107,18 +92,15 @@ function Previewer:_done(priority)
         return
     end
 
-    local done = self.lines[priority].task
+    local task = self.lines[priority]
 
-    -- shift todos
+    -- shift
     for i = priority, self.todos - 1 do
-        self.lines[i].task = self.lines[i + 1].task
+        self.lines[i] = self.lines[i + 1]
     end
 
     -- done the task
-    self.lines[self.todos] = {
-        date = os.date("%Y-%m-%d"),
-        task = done,
-    }
+    self.lines[self.todos] = "@"..os.date("%Y-%m-%d").. " "..task
     self.todos = self.todos - 1
 end
 
@@ -134,11 +116,11 @@ function Previewer:_edit(priority, task_or_priority)
             log.error("Task priority is too high")
         end
 
-        local task = self.lines[priority].task
+        local task = self.lines[priority]
         self:_delete(priority)
         self:_add(num, task)
     else
-        self.lines[priority].task = task_or_priority
+        self.lines[priority] = task_or_priority
     end
 end
 
@@ -146,8 +128,7 @@ function Previewer:load_file()
     local file = io.open(self.opts.file_path, "r")
     if file then
         for line in file:lines() do
-            line = self:_parse(line)
-            if line.priority  then
+            if line:sub(1, 1) ~= "@"  then
                 self.todos = self.todos + 1
             end
             table.insert(self.lines, line)
@@ -160,8 +141,7 @@ end
 function Previewer:save_file()
     local file = io.open(self.opts.file_path, "w")
     if file then
-        local lines = self:_repr()
-        for _, line in ipairs(lines) do
+        for _, line in ipairs(self.lines) do
             file:write(line .. "\n")
         end
         file:close()
@@ -170,32 +150,16 @@ function Previewer:save_file()
     end
 end
 
-function Previewer:_parse(line)
-    local priority = line:match("^(%d+)")
-    if priority then
-        return {
-            priority = tonumber(priority),
-            task = line:sub(#priority + 3)
-        }
-    else
-        local date = line:match("@(%d+-%d+-%d+)")
-        local task = line:match("@%d+-%d+-%d+%s+(.+)$")
-        return {
-            date = date,
-            task = task
-        }
-    end
-end
-
 function Previewer:_repr()
     local lines = {}
-    for _, line in ipairs(self.lines) do
-        if line.priority then
-            table.insert(lines, line.priority .. ". " .. line.task)
+    for i, line in ipairs(self.lines) do
+        if line:sub(1, 1) ~= "@" then
+            table.insert(lines, i .. ". " .. line)
         else
-            table.insert(lines, self.opts.done_caret.." @"..line.date.." "..line.task)
+            table.insert(lines, self.opts.done_caret..line)
         end
     end
+
     return lines
 end
 
