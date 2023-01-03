@@ -4,124 +4,124 @@ local utils = require("todo.utils")
 local Previewer = {}
 
 function Previewer:new(opts)
-    self.__index = self
-    self.opts = opts
-    local border = { "├", "─", "┤", "│", "╯", "─", "╰", "│" }
-    local buf, win_id = utils.create_bufwin(
-            opts.width, opts.previewer_height,
-            opts.row + 2, opts.col, border, 1
-        )
+  self.__index = self
+  self.opts = opts
+  local border = { "├", "─", "┤", "│", "╯", "─", "╰", "│" }
+  local buf, win_id = utils.create_bufwin(
+  opts.width, opts.previewer_height,
+  opts.row + 2, opts.col, border, 1
+  )
 
-    vim.api.nvim_win_set_option(win_id, "cursorline", true)
+  vim.api.nvim_win_set_option(win_id, "cursorline", true)
 
-    vim.api.nvim_win_set_option(win_id, "winhighlight", "NormalFloat:Normal,FloatBorder:TodoBorder")
+  vim.api.nvim_win_set_option(win_id, "winhighlight", "NormalFloat:Normal,FloatBorder:TodoBorder")
 
-    local previewer = {
-        buf = buf,
-        win_id = win_id,
-        lines = {},
-        todos = 0,
-    }
-    return setmetatable(previewer, self)
+  local previewer = {
+    buf = buf,
+    win_id = win_id,
+    lines = {},
+    todos = 0,
+  }
+  return setmetatable(previewer, self)
 end
 
 function Previewer:add_highlight()
-    vim.fn.matchadd("TodoPriority", "^\\d\\+\\.")
-    vim.fn.matchadd("TodoDone", "^"..self.opts.done_caret)
-    vim.fn.matchadd("TodoDate", "@\\d\\+-\\d\\+-\\d\\+")
+  vim.fn.matchadd("TodoPriority", "^\\d\\+\\.")
+  vim.fn.matchadd("TodoDone", "^"..self.opts.done_caret)
+  vim.fn.matchadd("TodoDate", "@\\d\\+-\\d\\+-\\d\\+")
 end
 
 function Previewer:preview(op, arg1, arg2)
-    if arg1 == nil then
-        log.error("Task does not exist")
-        return nil
-    end
+  if arg1 == nil then
+    log.error("Task does not exist")
+    return nil
+  end
 
-    if op == "add" then
-        self:_add(arg1, arg2)
-    elseif op == "delete" then
-        self:_delete(arg1)
-    elseif op == "done" then
-        self:_done(arg1)
-    elseif op == "edit" then
-        self:_edit(arg1, arg2)
-    else
-        log.error("Unknown command: ", op)
-    end
+  if op == "add" then
+    self:_add(arg1, arg2)
+  elseif op == "delete" then
+    self:_delete(arg1)
+  elseif op == "done" then
+    self:_done(arg1)
+  elseif op == "edit" then
+    self:_edit(arg1, arg2)
+  else
+    log.error("Unknown command: ", op)
+  end
 
-    self:_update()
+  self:_update()
 
-    return ""
+  return ""
 end
 
 function Previewer:_add(priority, task)
-    if priority > self.todos + 1 then
-        log.error("Task priority is too high")
-        return
-    end
+  if priority > self.todos + 1 then
+    log.error("Task priority is too high")
+    return
+  end
 
-    -- shift
-    for i = #self.lines, priority, -1 do
-        self.lines[i + 1] = self.lines[i]
-    end
+  -- shift
+  for i = #self.lines, priority, -1 do
+    self.lines[i + 1] = self.lines[i]
+  end
 
-    -- add new task
-    self.lines[priority] = task
-    self.todos = self.todos + 1
+  -- add new task
+  self.lines[priority] = task
+  self.todos = self.todos + 1
 end
 
 function Previewer:_delete(priority)
-    if priority > self.todos then
-        log.error("Task does not exist")
-        return
-    end
+  if priority > self.todos then
+    log.error("Task does not exist")
+    return
+  end
 
-    -- shift
-    for i = priority, #self.lines - 1 do
-        self.lines[i] = self.lines[i + 1]
-    end
+  -- shift
+  for i = priority, #self.lines - 1 do
+    self.lines[i] = self.lines[i + 1]
+  end
 
-    -- delete the last empty line
-    self.lines[#self.lines] = nil
-    self.todos = self.todos - 1
+  -- delete the last empty line
+  self.lines[#self.lines] = nil
+  self.todos = self.todos - 1
 end
 
 function Previewer:_done(priority)
-    if priority > self.todos then
-        log.error("Task does not exist")
-        return
-    end
+  if priority > self.todos then
+    log.error("Task does not exist")
+    return
+  end
 
-    local task = self.lines[priority]
+  local task = self.lines[priority]
 
-    -- shift
-    for i = priority, self.todos - 1 do
-        self.lines[i] = self.lines[i + 1]
-    end
+  -- shift
+  for i = priority, self.todos - 1 do
+    self.lines[i] = self.lines[i + 1]
+  end
 
-    -- done the task
-    self.lines[self.todos] = "@"..os.date("%Y-%m-%d").. " "..task
-    self.todos = self.todos - 1
+  -- done the task
+  self.lines[self.todos] = "@"..os.date("%Y-%m-%d").. " "..task
+  self.todos = self.todos - 1
 end
 
 function Previewer:_edit(priority, task_or_priority)
-    if priority > self.todos then
-        log.error("Task does not exist")
-        return
+  if priority > self.todos then
+    log.error("Task does not exist")
+    return
+  end
+
+  local num = tonumber(task_or_priority)
+  if num then
+    if num > self.todos + 1 then
+      log.error("Task priority is too high")
     end
 
-    local num = tonumber(task_or_priority)
-    if num then
-        if num > self.todos + 1 then
-            log.error("Task priority is too high")
-        end
-
-        local task = self.lines[priority]
-        self:_delete(priority)
-        self:_add(num, task)
-    else
-        self.lines[priority] = task_or_priority
-    end
+    local task = self.lines[priority]
+    self:_delete(priority)
+    self:_add(num, task)
+  else
+    self.lines[priority] = task_or_priority
+  end
 end
 
 function Previewer:load_file()
