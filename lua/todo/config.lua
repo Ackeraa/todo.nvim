@@ -15,7 +15,7 @@ config.opts = {
   width = math.ceil(width * 0.5),
   row = math.ceil((height * 0.7 - 1) / 2) - 1,
   col = math.ceil((width * 0.5) / 2),
-  file_path = "todo.txt",
+  file_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/todo.nvim/todo.txt"
 }
 
 config.highlights = {

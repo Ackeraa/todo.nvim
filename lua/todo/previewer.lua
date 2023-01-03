@@ -125,55 +125,59 @@ function Previewer:_edit(priority, task_or_priority)
 end
 
 function Previewer:load_file()
-    local file = io.open(self.opts.file_path, "r")
-    if file then
-        for line in file:lines() do
-            if line:sub(1, 1) ~= "@"  then
-                self.todos = self.todos + 1
-            end
-            table.insert(self.lines, line)
-        end
-        file:close()
-        self:_update()
+  if vim.fn.filereadable(self.opts.file) == 0 then
+    vim.fn.writefile({}, self.opts.file)
+  end
+
+  local file = io.open(self.opts.file_path, "r")
+  if file then
+    for line in file:lines() do
+      if line:sub(1, 1) ~= "@"  then
+        self.todos = self.todos + 1
+      end
+      table.insert(self.lines, line)
     end
+    file:close()
+    self:_update()
+  end
 end
 
 function Previewer:save_file()
-    local file = io.open(self.opts.file_path, "w")
-    if file then
-        for _, line in ipairs(self.lines) do
-            file:write(line .. "\n")
-        end
-        file:close()
-    else
-        log.error("Failed to open file: ", self.opts.file_path)
+  local file = io.open(self.opts.file_path, "w")
+  if file then
+    for _, line in ipairs(self.lines) do
+      file:write(line .. "\n")
     end
+    file:close()
+  else
+    log.error("Failed to open file: ", self.opts.file_path)
+  end
 end
 
 function Previewer:_repr()
-    local lines = {}
-    for i, line in ipairs(self.lines) do
-        if line:sub(1, 1) ~= "@" then
-            table.insert(lines, i .. ". " .. line)
-        else
-            table.insert(lines, self.opts.done_caret..line)
-        end
+  local lines = {}
+  for i, line in ipairs(self.lines) do
+    if line:sub(1, 1) ~= "@" then
+      table.insert(lines, i .. ". " .. line)
+    else
+      table.insert(lines, self.opts.done_caret..line)
     end
+  end
 
-    return lines
+  return lines
 end
 
 function Previewer:_update()
-    local lines = self:_repr()
-    vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, lines)
+  local lines = self:_repr()
+  vim.api.nvim_buf_set_lines(self.buf, 0, -1, false, lines)
 end
 
 function Previewer:close()
-    vim.api.nvim_win_close(self.win_id, true)
-    if self.opts.upload_to_reminder then
-        local reminder = require("todo.extensions.reminder")
-        reminder.write_to_reminder(self.opts.file_path)
-    end
+  vim.api.nvim_win_close(self.win_id, true)
+  if self.opts.upload_to_reminder then
+    local reminder = require("todo.extensions.reminder")
+    reminder.write_to_reminder(self.opts.file_path)
+  end
 end
 
 return Previewer

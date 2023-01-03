@@ -1,4 +1,5 @@
 .DS_Store
+todo.txt
 
 # Compiled Lua sources
 luac.out
